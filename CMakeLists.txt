@@ -1,0 +1,20 @@
+cmake_minimum_required(VERSION 3.26)
+project(schokoban C)
+
+set(CMAKE_C_STANDARD 11)
+
+include_directories(include)
+include_directories(src)
+
+add_executable(schokoban
+        src/main.c
+        include/debugmalloc.h
+        src/debugmalloc.c
+        include/econio.h
+        src/econio.c
+        include/map.h
+        src/map.c)
+
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Werror")
+
+
