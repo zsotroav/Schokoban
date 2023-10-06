@@ -19,13 +19,19 @@ typedef char map_char[1];
 
 typedef struct {
     FILE *mapptr;
-    FILE *statptr;
 
     int player_x;
     int player_y;
     int width;
     int height;
+    /**
+     * @brief Record number of moves for this level
+     */
     int best;
+
+    /**
+     * @brief Number of moves made
+     */
     int move_cnt;
     map_char *map;
 } map_data;

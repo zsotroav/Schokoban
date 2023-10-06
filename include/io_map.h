@@ -7,9 +7,9 @@
 
 
 /**
- * @brief Opens the map file at the given location
- * @param loc Location (including file name) of map file
- * @return Success or Failure to open file
+ * @brief Opens the given map file
+ * @param loc relative or absolute path to the xsb map file
+ * @return generated map data
  */
 map_data* map_open(const char *loc);
 

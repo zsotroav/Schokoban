@@ -17,6 +17,7 @@ bool map_load_stats(map_data *map, const char* loc, bool print) {
 
     fscanf(map->statptr, "%d ", &(map->best));
 
+    // If we're here to print the leaderboard and not just read the record:
     if (print) {
         econio_clrscr();
         print_logo();
@@ -34,12 +35,15 @@ map_data* map_open(const char* loc) {
     map_data *map = malloc(sizeof *map);
     map->width = 0;
     map->height = 0;
+    map->best = 0;
+    map->move_cnt = 0;
 
+    // Open XSB for reading
     map->mapptr = fopen(loc, "r");
-    if (map->mapptr == NULL) return false;
+    if (map->mapptr == NULL) return NULL;
 
     char c;
-    int curr = 0;
+    int curr = 0; // Current width
     while(( c = fgetc(map->mapptr) ) != EOF ) {
         if (c == '\n') {
             (map->height)++;
@@ -51,10 +55,12 @@ map_data* map_open(const char* loc) {
         curr++;
     }
 
+    // Reset the file read head for potential future use
     fseek(map->mapptr, 0, 0);
 
-    if (map->width == 0 || map->height == 0) return false;
+    if (map->width == 0 || map->height == 0) return NULL;
 
+    // malloc the required space for the map data
     map->map = malloc(map->width * map->height);
     memset(map->map, 0x00, map->width * map->height);
 
@@ -64,8 +70,6 @@ map_data* map_open(const char* loc) {
 }
 
 bool map_load(map_data *map) {
-    map->move_cnt = 0;
-
     char c;
     int i = 0, j = 0;
     while(( c = fgetc(map->mapptr) ) != EOF ) {

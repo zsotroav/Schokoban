@@ -10,6 +10,7 @@
 /**
  * @brief Initialize and begin game on the given level
  * @param level Path to the XSB file for the map
+ * @return generated map data
  */
 map_data* game_init(const char* level);
 
@@ -17,6 +18,7 @@ void game_end(map_data *map);
 
 /**
  * @brief Wait for and handle input
+ * @return false if game is completed or aborted, true otherwise
  */
 bool game_wait_input(map_data *map);
 

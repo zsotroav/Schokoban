@@ -3,6 +3,8 @@
 
 #include "data.h"
 
+#define cursor_bottom(map) econio_gotoxy(0, 15 + map->height)
+
 /**
  * @brief Prints the full game to the screen
  */
