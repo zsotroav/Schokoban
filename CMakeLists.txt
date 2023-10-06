@@ -16,7 +16,9 @@ add_executable(schokoban
         src/io_map.c
         include/data.h
         include/printer.h
-        src/printer.c)
+        src/printer.c
+        src/game.c
+        include/game.h)
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Werror")
 

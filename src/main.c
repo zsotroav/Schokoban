@@ -1,8 +1,7 @@
 #include <stdio.h>
 #include <windows.h>
+#include "game.h"
 #include "data.h"
-#include "io_map.h"
-#include "printer.h"
 
 
 int main(void) {
@@ -11,15 +10,14 @@ int main(void) {
     SetConsoleOutputCP( CP_UTF8 );
     setvbuf(stdout, NULL, _IONBF, 0);
 
-    map_data *map = map_open("0CNH-Alice.xsb");
+    map_data *map = game_init("0CNH-Alice.xsb");
     if (map == NULL) {
         printf("Game init failed!");
         return -1;
     }
-    map_load(map);
 
-    print_all(map);
+    while (game_wait_input(map)) ;
 
-    map_close(map);
+    game_end(map);
     return 0;
 }

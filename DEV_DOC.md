@@ -34,6 +34,7 @@ schokoban
 ├── src
 |   ├── debugmalloc.c   // Library code
 |   ├── econio.c        // Library code
+|   ├── game.c          // Most of the game logic's code
 |   ├── io_map.c        // Handling map reading
 │   ├── main.c          // Main entry code
 |   └── printer.c       // UI Handling
@@ -41,6 +42,7 @@ schokoban
 |   ├── data.h
 |   ├── debugmalloc.h
 │   ├── econio.h
+│   ├── game.h
 |   ├── io_map.h
 │   ├── ECONIO_LICENSE  // MIT License file for the econio library
 |   └── printer.h
