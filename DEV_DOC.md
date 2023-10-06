@@ -27,24 +27,29 @@ GitHub repository for the project: [zsotroav/Schokoban](https://github.com/zsotr
 ## High-level overview
 
 ### Files
+The project follows a simple folder structure with C source code in the 
+`src` directory and related header files in the `include` directory.
 ```
 schokoban
 ├── src
+|   ├── data.c          // All shared daza
 |   ├── debugmalloc.c   // Library code
 |   ├── econio.c        // Library code
-│   ├── main.c          // Main code
-|   └── map.c           // Map handling
+|   ├── io_map.c        // Handling map reading
+│   ├── main.c          // Main entry code
+|   └── printer.c       // UI Handling
 ├── include
+|   ├── data.h
 |   ├── debugmalloc.h
 │   ├── econio.h
+|   ├── io_map.h
 │   ├── ECONIO_LICENSE  // MIT License file for the econio library
-|   └── map.h
+|   └── printer.h
 ├── .gitignore
 ├── CMakeLists.txt
 ├── DEV_DOC.md          // This documentation
 ├── econio_readme.md    // Readme for econio lib, may get removed in the future
 └── LICENSE             // GPL-3.0 (License file)
-
 ```
 
 #### Used external code

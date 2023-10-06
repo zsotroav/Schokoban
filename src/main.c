@@ -1,11 +1,7 @@
-//
-// Created by zsotroav on 2023-10-05.
-//
-
 #include <stdio.h>
 #include "econio.h"
 #include "debugmalloc.h"
-#include "map.h"
+#include "io_map.h"
 #include <wchar.h>
 #include <windows.h>
 
@@ -24,11 +20,11 @@ int main(void) {
     SetConsoleOutputCP( CP_UTF8 );
     setvbuf(stdout, NULL, _IONBF, 0);
 
-    open_map_file("0CNH-Alice.xsb");
-    load_map_file();
+    map_open("0CNH-Alice.xsb");
+    map_load();
 
     print_all();
 
-    close_map_file();
+    map_close();
     return 0;
 }

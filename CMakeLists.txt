@@ -12,8 +12,12 @@ add_executable(schokoban
         src/debugmalloc.c
         include/econio.h
         src/econio.c
-        include/map.h
-        src/map.c)
+        include/io_map.h
+        src/io_map.c
+        include/data.h
+        src/data.c
+        include/printer.h
+        src/printer.c)
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Werror")
 
