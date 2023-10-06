@@ -2,37 +2,32 @@
 #define SCHOKOBAN_DATA_H
 
 #include <stdbool.h>
+#include <stdio.h>
 
-#define get_xy(x, y) *map[x * map_width + y]
+#define get_xy(map, x, y) *(map->map[x * map->width + y])
+#define set_xy(map, x, y, value) (*(map->map[x * map->width + y]) = value)
+#define indent(map) ((20 - map->width) / 2)
 
-/**
- * @brief Map's loaded status - Any other data value should be
- * considered garbage data if this is false
- */
-extern bool map_loaded;
+typedef enum { L, U, R, D, l, u, r, d, x } move_type;
 
-/**
- * @brief X coordinate of the player character
- */
-extern int player_x;
-/**
- * @brief Y coordinate of player character
- */
-extern int player_y;
-/**
- * @brief Width of current map
- */
-extern int map_width;
-/**
- * @brief Height of current map
- */
-extern int map_height;
-/**
- * @brief Best (least moves) run for this level. 0 if no data.
- */
-extern int map_best;
+typedef struct {
+    move_type type;
+    struct move *prev, *next;
+} move;
 
 typedef char map_char[1];
-extern map_char *map;
+
+typedef struct {
+    FILE *mapptr;
+    FILE *statptr;
+
+    int player_x;
+    int player_y;
+    int width;
+    int height;
+    int best;
+    int move_cnt;
+    map_char *map;
+} map_data;
 
 #endif //SCHOKOBAN_DATA_H

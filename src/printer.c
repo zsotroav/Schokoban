@@ -4,29 +4,27 @@
 #include <stdio.h>
 
 
-void print_all() {
+void print_all(map_data *map) {
+    econio_clrscr();
     print_logo();
-    print_stats(map_best);
-    print_map_all();
+    print_stats(map->best);
+    print_map_all(map);
     print_controls();
 }
 
-void print_map_all() {
-    if (!map_loaded) return;
-
-    int indent = (20 - map_width) / 2;
-    for (int i = 0; i < map_height; ++i) {
-        for (int j = 0; j < indent; ++j) printf(" ");
-        for (int j = 0; j < map_width; ++j) {
-            print_xy(i, j);
+void print_map_all(map_data *map) {
+    for (int i = 0; i < map->height; ++i) {
+        for (int j = 0; j < indent(map); ++j) printf(" ");
+        for (int j = 0; j < map->width; ++j) {
+            print_xy(map, j, i);
         }
         printf("\n");
     }
 }
 
-void print_xy(int x, int y) {
+void print_xy(map_data *map, int x, int y) {
     econio_textcolor(COL_RESET);
-    switch (get_xy(x, y)) {
+    switch (get_xy(map, x, y)) {
         case '#': printf("█"); break;
         case '*':
             econio_textcolor(COL_GREEN);
@@ -45,9 +43,15 @@ void print_xy(int x, int y) {
             econio_textcolor(COL_RED);
             printf("⨯");
             break;
-        default: printf("%c", get_xy(x, y)); break;
+        default: printf("%c", get_xy(map, x, y)); break;
     }
     econio_textcolor(COL_RESET);
+}
+
+void print_xy_offset(map_data *map, int x, int y) {
+    econio_gotoxy(indent(map) + x, 6 + y);
+    print_xy(map, x, y);
+    econio_gotoxy(0, 14 + map->height );
 }
 
 void print_logo() {
@@ -68,7 +72,6 @@ void print_stats(int best) {
 void print_update_move(int new){
     econio_gotoxy(11, 3);
     printf("%3d", new);
-    econio_gotoxy(0, 14 + map_height );
 }
 
 void print_controls() {

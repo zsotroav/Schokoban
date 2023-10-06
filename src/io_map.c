@@ -8,46 +8,42 @@
 #include "debugmalloc.h"
 
 
-FILE *mapptr;
-FILE *statptr;
-
-bool map_is_valid_char(int c) {
-    const char* valid = "@+$*#._- ";
-    return strchr(valid, c);
-}
-
-bool map_load_stats(const char* loc, bool print) {
+bool map_load_stats(map_data *map, const char* loc, bool print) {
     char stats_loc[strlen(loc) + 5];
     memset(stats_loc, 0x00, strlen(loc) + 5);
     strcpy(stats_loc, loc);
 
-    if ((statptr = fopen(strcat(stats_loc, ".dat"), "r")) == NULL) return false;
+    if ((map->statptr = fopen(strcat(stats_loc, ".dat"), "r")) == NULL) return false;
 
-    fscanf(statptr, "%d ", &map_best);
+    fscanf(map->statptr, "%d ", &(map->best));
 
     if (print) {
         econio_clrscr();
         print_logo();
-        printf("    LEADERBOARD\n\nLevel: %s\n%3d ", loc, map_best);
+        printf("    LEADERBOARD\n\nLevel: %s\n%3d ", loc, map->best);
 
     }
 
     // TODO: Finish leaderboard printing
 
-    fclose(statptr);
+    fclose(map->statptr);
     return true;
 }
 
-bool map_open(const char* loc) {
-    mapptr = fopen(loc, "r");
-    if (mapptr == NULL) return false;
+map_data* map_open(const char* loc) {
+    map_data *map = malloc(sizeof *map);
+    map->width = 0;
+    map->height = 0;
+
+    map->mapptr = fopen(loc, "r");
+    if (map->mapptr == NULL) return false;
 
     char c;
     int curr = 0;
-    while(( c = fgetc(mapptr) ) != EOF ) {
+    while(( c = fgetc(map->mapptr) ) != EOF ) {
         if (c == '\n') {
-            map_height++;
-            if (curr > map_width) map_width = curr;
+            (map->height)++;
+            if (curr > map->width) map->width = curr;
             curr = 0;
             continue;
         }
@@ -55,41 +51,43 @@ bool map_open(const char* loc) {
         curr++;
     }
 
-    fseek(mapptr, 0, 0);
+    fseek(map->mapptr, 0, 0);
 
-    if (map_width == 0 || map_height == 0) return false;
+    if (map->width == 0 || map->height == 0) return false;
 
-    map = malloc(map_width * map_height);
-    memset(map, 0x00, map_width * map_height);
+    map->map = malloc(map->width * map->height);
+    memset(map->map, 0x00, map->width * map->height);
 
-    map_load_stats(loc, false);
+    map_load_stats(map, loc, false);
 
-    map_loaded = true;
-    return true;
+    return map;
 }
 
-bool map_load() {
-    if (!map_loaded) return false;
+bool map_load(map_data *map) {
+    map->move_cnt = 0;
 
     char c;
     int i = 0, j = 0;
-    while(( c = fgetc(mapptr) ) != EOF ) {
+    while(( c = fgetc(map->mapptr) ) != EOF ) {
         if (c == '\n') {
             i++;
             j = 0;
             continue;
         }
         if (!map_is_valid_char(c)) break;
-        *map[i * map_width + j] = c;
-        j++;
+        set_xy(map, j++, i, c);
+        if (c == '@' || c == '+') {
+            map->player_x = j - 1;
+            map->player_y = i;
+        }
     }
 
+    fseek(map->mapptr, 0, 0);
     return true;
 }
 
-void map_close() {
-    map_width = 0;
-    map_height = 0;
-    fclose(mapptr);
+void map_close(map_data *map) {
+    fclose(map->mapptr);
+    free(map->map);
     free(map);
 }

@@ -15,7 +15,6 @@ add_executable(schokoban
         include/io_map.h
         src/io_map.c
         include/data.h
-        src/data.c
         include/printer.h
         src/printer.c)
 

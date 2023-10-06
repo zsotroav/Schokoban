@@ -32,7 +32,6 @@ The project follows a simple folder structure with C source code in the
 ```
 schokoban
 ├── src
-|   ├── data.c          // All shared daza
 |   ├── debugmalloc.c   // Library code
 |   ├── econio.c        // Library code
 |   ├── io_map.c        // Handling map reading
