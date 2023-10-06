@@ -27,8 +27,12 @@ extern int map_width;
  * @brief Height of current map
  */
 extern int map_height;
+/**
+ * @brief Best (least moves) run for this level. 0 if no data.
+ */
+extern int map_best;
 
 typedef char map_char[1];
-map_char *map;
+extern map_char *map;
 
 #endif //SCHOKOBAN_DATA_H

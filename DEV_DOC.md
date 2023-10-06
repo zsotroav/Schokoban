@@ -47,12 +47,12 @@ schokoban
 |   └── printer.h
 ├── .gitignore
 ├── CMakeLists.txt
-├── DEV_DOC.md          // This documentation
+├── DEV_DOC.md
 ├── econio_readme.md    // Readme for econio lib, may get removed in the future
 └── LICENSE             // GPL-3.0 (License file)
 ```
 
-#### Used external code
+### Used external resources
 - Libraries:
   1. [c-econio](https://infoc.eet.bme.hu/megjelenites/c-econio.zip) 
      by Zoltan Czirkos. [MIT License](include/ECONIO_LICENSE)
@@ -62,6 +62,9 @@ schokoban
 - General reference documents:
   1. [Sokoban.org](http://sokoban.org/about_sokoban.php) for game rules 
      and XSB/LURD format specs
+- Miscellaneous: 
+   1. ASCII font for logo: tmplr by Eugene Ghanizadeh Khoub, 
+   generated with [patorjk.com](https://patorjk.com/software/taag/#p=display&h=1&v=2&f=Tmplr&t=SCHOKOBAN)
 
 ## Dev notes
 - The handed out library [econio](https://infoc.eet.bme.hu/megjelenites/c-econio.zip) 
@@ -69,3 +72,10 @@ schokoban
   lines [256](src/econio.c#L256), [257](src/econio.c#L257), and [327](src/econio.c#L327) 
   in [src/econio.c](src/econio.c#L256-L257) due to the `-Wall -Werror` compiler requirements. 
   The library's code is otherwise untouched. 
+
+---
+```
+┏┓┏┓┓┏┏┓┓┏┓┏┓┳┓┏┓┳┓    ┳┓┏┓┓┏ ┳┓┏┓┏┓┏┓
+┗┓┃ ┣┫┃┃┃┫ ┃┃┣┫┣┫┃┃ ━━ ┃┃┣ ┃┃ ┃┃┃┃┃ ┗┓
+┗┛┗┛┛┗┗┛┛┗┛┗┛┻┛┛┗┛┗    ┻┛┗┛┗┛ ┻┛┗┛┗┛┗┛
+```
