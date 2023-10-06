@@ -7,7 +7,7 @@
 #include "printer.h"
 
 
-map_data *game_init(const char* level) {
+map_data *game_init(char* level) {
     map_data *map = map_open(level);
     if (map == NULL) return NULL;
     if (!map_load(map)) return NULL;
@@ -38,6 +38,9 @@ bool game_wait_input(map_data *map){
         case KEY_F12: print_all(map); break;
         case KEY_ESCAPE: return false;
     }
+
+    // Goal reached if boxes are zero
+    if (map->box == 0) return false;
     return true;
 }
 
@@ -66,6 +69,9 @@ void game_mv(map_data *map, bool ud, bool rd) {
     print_xy_offset(map, map->player_x, map->player_y);
 
     if (is_box(next)) {
+        // Keep the number of boxes on and off goals
+        if (further == '.') map->box--;
+        if (next == '*') map->box++;
         set_xy(map, (map->player_x + 2*x), (map->player_y + 2*y),
                (further == '.' ? '*' : '$'));
         print_xy_offset(map, map->player_x + 2*x, map->player_y + 2*y);

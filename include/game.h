@@ -12,7 +12,7 @@
  * @param level Path to the XSB file for the map
  * @return generated map data
  */
-map_data* game_init(const char* level);
+map_data* game_init(char* level);
 
 void game_end(map_data *map);
 

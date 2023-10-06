@@ -11,7 +11,7 @@
  * @param loc relative or absolute path to the xsb map file
  * @return generated map data
  */
-map_data* map_open(const char *loc);
+map_data* map_open(char *loc);
 
 /**
  * @brief Loads the contents of the map. Must always be called after map_open()

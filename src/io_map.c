@@ -8,35 +8,43 @@
 #include "debugmalloc.h"
 
 
-bool map_load_stats(map_data *map, const char* loc, bool print) {
-    char stats_loc[strlen(loc) + 5];
-    memset(stats_loc, 0x00, strlen(loc) + 5);
-    strcpy(stats_loc, loc);
+bool map_load_stats(map_data *map, bool print) {
+    // Open stats file, which is just the xsb map file with .dat at the end
+    FILE *statptr;
+    char stats_loc[strlen(map->loc) + 5];
+    memset(stats_loc, 0x00, strlen(map->loc) + 5);
+    strcpy(stats_loc, map->loc);
 
-    if ((map->statptr = fopen(strcat(stats_loc, ".dat"), "r")) == NULL) return false;
+    if ((statptr = fopen(strcat(stats_loc, ".dat"), "r")) == NULL) return false;
 
-    fscanf(map->statptr, "%d ", &(map->best));
+    // First number is always the record
+    fscanf(statptr, "%d ", &(map->best));
 
     // If we're here to print the leaderboard and not just read the record:
     if (print) {
         econio_clrscr();
         print_logo();
-        printf("    LEADERBOARD\n\nLevel: %s\n%3d ", loc, map->best);
+        printf("    LEADERBOARD\n\nLevel: %s\n%3d ", map->title, map->best);
 
     }
 
     // TODO: Finish leaderboard printing
 
-    fclose(map->statptr);
+    fclose(statptr);
     return true;
 }
 
-map_data* map_open(const char* loc) {
+map_data* map_open(char* loc) {
+    // Create and initialize map data
     map_data *map = malloc(sizeof *map);
+
+    map->loc = malloc(strlen(loc));
+    map->loc = loc;
     map->width = 0;
     map->height = 0;
     map->best = 0;
     map->move_cnt = 0;
+    map->box = 0;
 
     // Open XSB for reading
     map->mapptr = fopen(loc, "r");
@@ -64,7 +72,7 @@ map_data* map_open(const char* loc) {
     map->map = malloc(map->width * map->height);
     memset(map->map, 0x00, map->width * map->height);
 
-    map_load_stats(map, loc, false);
+    map_load_stats(map, false);
 
     return map;
 }
@@ -84,6 +92,7 @@ bool map_load(map_data *map) {
             map->player_x = j - 1;
             map->player_y = i;
         }
+        if (c == '$') map->box++;
     }
 
     fseek(map->mapptr, 0, 0);
@@ -92,6 +101,8 @@ bool map_load(map_data *map) {
 
 void map_close(map_data *map) {
     fclose(map->mapptr);
+    free(map->title);
+    free(map->loc);
     free(map->map);
     free(map);
 }

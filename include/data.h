@@ -18,6 +18,8 @@ typedef struct {
 typedef char map_char[1];
 
 typedef struct {
+    char* title;
+    char* loc;
     FILE *mapptr;
 
     int player_x;
@@ -33,6 +35,10 @@ typedef struct {
      * @brief Number of moves made
      */
     int move_cnt;
+    /**
+     * @brief Number of boxes not on goals yet
+     */
+    int box;
     map_char *map;
 } map_data;
 
