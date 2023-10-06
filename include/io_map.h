@@ -7,7 +7,7 @@
  * @param loc Location (including file name) of map file
  * @return Success or Failure to open file
  */
-bool map_open(char *loc);
+bool map_open(const char *loc);
 
 /**
  * @brief Loads the contents of the map. Must always be called after map_open()

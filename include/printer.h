@@ -22,6 +22,8 @@ void print_logo();
 
 void print_stats(int best);
 
+void print_update_move(int new);
+
 void print_controls();
 
 #endif //SCHOKOBAN_PRINTER_H

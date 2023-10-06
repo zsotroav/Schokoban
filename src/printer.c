@@ -14,7 +14,9 @@ void print_all() {
 void print_map_all() {
     if (!map_loaded) return;
 
+    int indent = (20 - map_width) / 2;
     for (int i = 0; i < map_height; ++i) {
+        for (int j = 0; j < indent; ++j) printf(" ");
         for (int j = 0; j < map_width; ++j) {
             print_xy(i, j);
         }
@@ -55,12 +57,18 @@ void print_logo() {
 }
 
 void print_stats(int best) {
-    printf("     Moves:  0     \n"
-           "     Best:  %2d   \n\n", best);
+    printf("    Moves:   0     \n"
+           "    Best:  %3d   \n\n", best);
     if (best == 0) {
-        econio_gotoxy(13, 4);
-        printf("?\n\n");
+        econio_gotoxy(11, 4);
+        printf("N/A\n\n");
     }
+}
+
+void print_update_move(int new){
+    econio_gotoxy(11, 3);
+    printf("%3d", new);
+    econio_gotoxy(0, 14 + map_height );
 }
 
 void print_controls() {
