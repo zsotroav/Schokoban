@@ -7,6 +7,7 @@
 void print_all(map_data *map) {
     econio_clrscr();
     print_logo();
+    print_metadata(map);
     print_stats(map->best);
     print_map_all(map);
     print_controls();
@@ -58,6 +59,21 @@ void print_logo() {
     printf("┏┓┏┓┓┏┏┓┓┏┓┏┓┳┓┏┓┳┓\n"
            "┗┓┃ ┣┫┃┃┃┫ ┃┃┣┫┣┫┃┃\n"
            "┗┛┗┛┛┗┗┛┛┗┛┗┛┻┛┛┗┛┗\n");
+}
+
+void print_metadata(map_data* map) {
+    if (map->title[0] == '\0') return;
+
+    econio_gotoxy(22, 0);
+    printf("Map: ");
+    econio_gotoxy(22, 1);
+    printf("%s", map->title);
+
+    if (map->creator[0] != '\0') {
+        econio_gotoxy(22, 2);
+        printf("by %s", map->creator);
+    }
+    econio_gotoxy(0, 3);
 }
 
 void print_stats(int best) {

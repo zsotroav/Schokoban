@@ -17,8 +17,10 @@ map_data* map_open(char *loc);
  * @brief Loads the contents of the map. Must always be called after map_open()
  * @return Success or Failure to load map data.
  */
-bool map_load(map_data *map);
+void map_load(map_data *map);
 
+
+void map_reset(map_data *map);
 /**
  * @brief Closes the map file
  */

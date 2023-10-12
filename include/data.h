@@ -18,8 +18,15 @@ typedef struct {
 typedef char map_char[1];
 
 typedef struct {
-    char* title;
+    char title[50];
+    char creator[50];
+    /**
+     * @brief Location of the map data file
+     */
     char* loc;
+    /**
+     * @brief Pointer to the map data file
+     */
     FILE *mapptr;
 
     int player_x;

@@ -33,6 +33,8 @@ void print_xy_offset(map_data *map, int x, int y);
 
 void print_logo();
 
+void print_metadata(map_data* map);
+
 void print_stats(int best);
 
 /**

@@ -10,7 +10,6 @@
 map_data *game_init(char* level) {
     map_data *map = map_open(level);
     if (map == NULL) return NULL;
-    if (!map_load(map)) return NULL;
 
     print_all(map);
     econio_rawmode();
@@ -34,7 +33,7 @@ bool game_wait_input(map_data *map){
         case KEY_DOWN: game_mv(map, true, true); break;
         case 'd':
         case KEY_RIGHT: game_mv(map, false, true); break;
-        case 'r': map_load(map);
+        case 'r': map_reset(map); break;
         case KEY_F12: print_all(map); break;
         case KEY_ESCAPE: return false;
     }
