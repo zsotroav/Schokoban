@@ -1,13 +1,15 @@
 #include <stdio.h>
-#include <windows.h>
 #include "game.h"
 #include "data.h"
-
+#ifdef _WIN32
+    #include <windows.h>
+#endif
 
 int main(void) {
-    // Ensure that encoding on the terminal will be UTF-8 so the characters can display properly.
-    // This one line took me 3 hours and a lot of headaches of back and forth and Windows Terminal having weird issues
-    SetConsoleOutputCP( CP_UTF8 );
+    #ifdef _WIN32
+        SetConsoleOutputCP( CP_UTF8 );
+    #endif
+    
     setvbuf(stdout, NULL, _IONBF, 0);
 
     map_data *map = game_init("0CNH-Alice.xsb");
