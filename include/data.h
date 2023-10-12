@@ -7,10 +7,11 @@
 #define get_xy(map, x, y) *(map->map[x * map->width + y])
 #define set_xy(map, x, y, value) (*(map->map[x * map->width + y]) = value)
 #define indent(map) ((20 - map->width) / 2)
+#define go_to_last_move(move) while (move->next != NULL) move = move->next
 
-typedef enum { L, U, R, D, l, u, r, d, x } move_type;
+typedef enum { L, U, R, D, l, u, r, d, x, inv } move_type;
 
-typedef struct {
+typedef struct move {
     move_type type;
     struct move *prev, *next;
 } move;
@@ -47,6 +48,9 @@ typedef struct {
      */
     int box;
     map_char *map;
+    move *moves;
 } map_data;
+
+move* get_next_move(move* prev);
 
 #endif //SCHOKOBAN_DATA_H

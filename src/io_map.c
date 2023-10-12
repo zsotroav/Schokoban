@@ -115,9 +115,21 @@ void map_load(map_data* map) {
 }
 
 void map_reset(map_data *map) {
-    fscanf(map->mapptr, "%*d,%*d\n");
+    // Reset values
     map->move_cnt = 0;
     map->box = 0;
+
+    // Free all moves except the first
+    move* last = map->moves;
+    go_to_last_move(last);
+    while (last->prev != NULL) {
+        last = last->prev;
+        free(last->next);
+    }
+    last->next = NULL;
+
+    // Completely reload map
+    fscanf(map->mapptr, "%*d,%*d\n");
     map_load(map);
 
     print_all(map);
@@ -126,6 +138,14 @@ void map_reset(map_data *map) {
 }
 
 void map_close(map_data *map) {
+    move* last = map->moves;
+    go_to_last_move(last);
+    while (last->prev != NULL) {
+        last = last->prev;
+        free(last->next);
+    }
+    free(last);
+
     fclose(map->mapptr);
     free(map->loc);
     free(map->map);

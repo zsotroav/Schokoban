@@ -21,6 +21,58 @@ void game_end(map_data *map) {
     map_close(map);
 }
 
+void game_undo(map_data *map){
+    move* prev = map->moves;
+    go_to_last_move(prev);
+
+    int x_off = 0, y_off = 0;
+    bool box = false;
+
+    switch (prev->type) {
+        case L: box = true;
+        case l: x_off = 1; break;
+        case U: box = true;
+        case u: y_off = 1; break;
+        case R: box = true;
+        case r: x_off = -1; break;
+        case D: box = true;
+        case d: y_off = -1; break;
+        default: return;
+    }
+    // Pay attention if we were on a goal or not
+    set_xy(map, map->player_x, map->player_y,
+           (get_xy(map, map->player_x, map->player_y) == '+' ? '.' : ' '));
+
+    set_xy(map, (map->player_x + x_off), (map->player_y + y_off),
+           (get_xy(map, (map->player_x + x_off), (map->player_y + y_off)) == '.' ? '+' : '@'));
+
+    if (box) {
+        bool was_goal = get_xy(map,
+                               (map->player_x + (x_off * -1)),
+                               (map->player_y + (y_off * -1)))  == '*';
+        bool to_goal = get_xy(map, map->player_x, map->player_y) == '.';
+        set_xy(map, (map->player_x + (x_off * -1)), (map->player_y + (y_off * -1)),
+               (was_goal ? '.' : ' '));
+
+        print_xy_offset(map, (map->player_x + (x_off * -1)), (map->player_y + (y_off * -1)));
+
+        set_xy(map, map->player_x, map->player_y,
+               (to_goal ? '*' : '$'));
+
+        if (was_goal) map->box++;
+        if (to_goal) map->box--;
+    }
+
+    print_xy_offset(map, map->player_x, map->player_y);
+    print_xy_offset(map, (map->player_x + x_off), (map->player_y + y_off));
+
+    move* curr = get_next_move(prev);
+    curr->type = x;
+    print_update_move(++map->move_cnt);
+    map->player_x += x_off;
+    map->player_y += y_off;
+}
+
 bool game_wait_input(map_data *map){
     while (!econio_kbhit()) econio_sleep(0.2);
 
@@ -34,6 +86,7 @@ bool game_wait_input(map_data *map){
         case 'd':
         case KEY_RIGHT: game_mv(map, false, true); break;
         case 'r': map_reset(map); break;
+        case 'u': game_undo(map); break;
         case KEY_F12: print_all(map); break;
         case KEY_ESCAPE: return false;
     }
@@ -62,6 +115,9 @@ void game_mv(map_data *map, bool ud, bool rd) {
     // (by another box or a wall), don't move
     if (is_box(next) && obstr_ext(further)) return;
 
+    move* curr = get_next_move(map->moves);
+
+
     // Pay attention if we were on a goal or not
     set_xy(map, map->player_x, map->player_y,
            (get_xy(map, map->player_x, map->player_y) == '+' ? '.' : ' '));
@@ -74,6 +130,8 @@ void game_mv(map_data *map, bool ud, bool rd) {
         set_xy(map, (map->player_x + 2*x), (map->player_y + 2*y),
                (further == '.' ? '*' : '$'));
         print_xy_offset(map, map->player_x + 2*x, map->player_y + 2*y);
+
+        curr->type = (ud ? (rd ? D : U) : (rd ? R : L));
     }
 
     set_xy(map, (map->player_x + x), (map->player_y + y),
@@ -82,6 +140,8 @@ void game_mv(map_data *map, bool ud, bool rd) {
     map->player_x += x;
     map->player_y += y;
     print_update_move(++(map->move_cnt));
+
+    if (curr->type == inv) curr->type = (ud ? (rd ? d : u) : (rd ? r : l));
 
     cursor_bottom(map);
 }
