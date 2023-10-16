@@ -39,7 +39,7 @@ bool map_load_stats(map_data *map, bool print) {
 void map_init(map_data* map, char* loc){
     // Initialize map metadata
     memset(map->title, 0, 50);
-    memset(map->creator, 0, 50);
+    memset(map->author, 0, 50);
     map->loc = malloc(strlen(loc) + 1);
     strcpy(map->loc, loc);
     map->width = 0;
@@ -51,6 +51,17 @@ void map_init(map_data* map, char* loc){
     map->moves->prev = NULL;
     map->moves->next = NULL;
     map->moves->type = inv;
+}
+
+void read_meta(char* dest, char* meta, FILE* fptr) {
+    char c;
+    char params[10] = {0};
+    fread(params, 1, strlen(meta), fptr);
+        if (strcmp(params, meta) == 0) {
+            int i = 0;
+            while(( c = fgetc(fptr) ) != EOF && c != '\n' && i < 50)
+                dest[i++] = c;
+        }
 }
 
 map_data* map_open(char* loc) {
@@ -71,23 +82,10 @@ map_data* map_open(char* loc) {
 
     map_load(map);
 
-    char c;
-    char params[9] = {0};
-    fread(params, 1, 6, map->mapptr);
-    if (strcmp(params, "itle: ") == 0) { // no T because that was already read above
-        int i = 0;
-        while(( c = fgetc(map->mapptr) ) != EOF && c != '\n' && i < 50)
-            map->title[i++] = c;
-    }
+    read_meta(map->title, "itle: ", map->mapptr); // no T because that was already read above
+    read_meta(map->author, "Author: ", map->mapptr);
 
-    fread(params, 1, 8, map->mapptr);
-    if (strcmp(params, "Author: ") == 0) {
-        int i = 0;
-        while(( c = fgetc(map->mapptr) ) != EOF && c != '\n' && i < 50)
-            map->creator[i++] = c;
-    }
-
-    // Reset the file read head for potential future use
+    // Reset the file read head for potential future use (resets)
     fseek(map->mapptr, 0, 0);
 
     map_load_stats(map, false);
@@ -127,6 +125,7 @@ void map_reset(map_data *map) {
         free(last->next);
     }
     last->next = NULL;
+    last->type = inv;
 
     // Completely reload map
     fscanf(map->mapptr, "%*d,%*d\n");

@@ -20,7 +20,7 @@ typedef char map_char[1];
 
 typedef struct {
     char title[50];
-    char creator[50];
+    char author[50];
     /**
      * @brief Location of the map data file
      */

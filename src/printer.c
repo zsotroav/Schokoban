@@ -69,9 +69,9 @@ void print_metadata(map_data* map) {
     econio_gotoxy(22, 1);
     printf("%s", map->title);
 
-    if (map->creator[0] != '\0') {
+    if (map->author[0] != '\0') {
         econio_gotoxy(22, 2);
-        printf("by %s", map->creator);
+        printf("by %s", map->author);
     }
     econio_gotoxy(0, 3);
 }
