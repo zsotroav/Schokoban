@@ -19,8 +19,8 @@ typedef struct move {
 typedef char map_char[1];
 
 typedef struct {
-    char title[50];
-    char author[50];
+    char* title;
+    char* author;
     /**
      * @brief Location of the map data file
      */

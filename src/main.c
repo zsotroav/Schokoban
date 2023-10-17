@@ -18,7 +18,7 @@ int main(void) {
         return -1;
     }
 
-    while (game_wait_input(map)) ;
+    while (game_wait_input(map));
 
     if (map->box == 0) printf("Map cleared!\n");
     // TODO: Update best score

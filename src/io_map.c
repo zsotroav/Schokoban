@@ -7,6 +7,18 @@
 #include "data.h"
 #include "debugmalloc.h"
 
+char* read_long(FILE* fptr) {
+    int n = 1;
+
+    char* text = calloc(2, sizeof(char));
+    while((text[n-1] = fgetc(fptr)) != '\n' && text[n-1] != EOF) {
+        text = realloc(text, (++n+1) * sizeof(char));
+        //if (text == NULL) printf("Error");
+    }
+    text[n-1] = 0x00;
+
+    return text;
+}
 
 bool map_load_stats(map_data *map, bool print) {
     // Open stats file, which is just the xsb map file with .dat at the end
@@ -38,8 +50,6 @@ bool map_load_stats(map_data *map, bool print) {
 
 void map_init(map_data* map, char* loc){
     // Initialize map metadata
-    memset(map->title, 0, 50);
-    memset(map->author, 0, 50);
     map->loc = malloc(strlen(loc) + 1);
     strcpy(map->loc, loc);
     map->width = 0;
@@ -53,15 +63,10 @@ void map_init(map_data* map, char* loc){
     map->moves->type = inv;
 }
 
-void read_meta(char* dest, char* meta, FILE* fptr) {
-    char c;
+bool meta_exists(char* meta, FILE* fptr) {
     char params[10] = {0};
     fread(params, 1, strlen(meta), fptr);
-        if (strcmp(params, meta) == 0) {
-            int i = 0;
-            while(( c = fgetc(fptr) ) != EOF && c != '\n' && i < 50)
-                dest[i++] = c;
-        }
+    return (strcmp(params, meta) == 0);
 }
 
 map_data* map_open(char* loc) {
@@ -82,8 +87,9 @@ map_data* map_open(char* loc) {
 
     map_load(map);
 
-    read_meta(map->title, "itle: ", map->mapptr); // no T because that was already read above
-    read_meta(map->author, "Author: ", map->mapptr);
+    // no T because that was already read above
+    if (meta_exists("itle: ", map->mapptr)) map->title = read_long(map->mapptr);
+    if (meta_exists("Author: ", map->mapptr)) map->author = read_long(map->mapptr);
 
     // Reset the file read head for potential future use (resets)
     fseek(map->mapptr, 0, 0);
@@ -147,6 +153,8 @@ void map_close(map_data *map) {
 
     fclose(map->mapptr);
     free(map->loc);
+    free(map->title);
+    free(map->author);
     free(map->map);
     free(map);
 }
