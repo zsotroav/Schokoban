@@ -8,7 +8,7 @@ void print_all(map_data *map) {
     econio_clrscr();
     print_logo();
     print_metadata(map);
-    print_stats(map->best);
+    print_stats(map->fame_list->move);
     print_map_all(map);
     print_controls();
 }

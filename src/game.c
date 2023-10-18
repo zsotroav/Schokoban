@@ -18,6 +18,33 @@ map_data *game_init(char* level) {
 }
 
 void game_end(map_data *map) {
+    // TODO: Update best score (WIP)
+
+    if(map->box != 0) {
+        map_close(map);
+        return;
+    }
+
+    printf("Map cleared!");
+    // Best is always the first
+    if (map->move_cnt < map->fame_list->move) {
+        printf("New record! Do you want to add yourself to the leaderboard? (Y/N)\n");
+
+        bool waiting = true;
+        while (waiting) {
+            while (!econio_kbhit()) econio_sleep(0.2);
+            switch (econio_getch()) {
+                case 'y':
+                    map->fame_list = insert_fame_at(map->fame_list, 0, "Da best", map->move_cnt);
+                    // TODO: Read name from stdin
+                case 'n': waiting = false; break;
+            }
+        }
+
+        // printf("%s", map->move_cnt == map->fame_list->move ? "Record met!" : "New record!");
+    }
+
+
     map_close(map);
 }
 
@@ -87,7 +114,8 @@ bool game_wait_input(map_data *map){
         case KEY_RIGHT: game_mv(map, false, true); break;
         case 'r': map_reset(map); break;
         case 'u': game_undo(map); break;
-        case KEY_F12: print_all(map); break;
+        case KEY_F11: map->box = 0; return  false;  // Cheat mode
+        case KEY_F12: print_all(map); break;        // Re-print (debug)
         case KEY_ESCAPE: return false;
     }
 

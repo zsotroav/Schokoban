@@ -2,10 +2,21 @@
 #include <stdbool.h>
 #include <string.h>
 #include "io_map.h"
-#include "econio.h"
 #include "printer.h"
 #include "data.h"
 #include "debugmalloc.h"
+
+FILE* get_stat_file(char* loc, char* mode) {
+    // Open stats file, which is just the xsb map file with .dat at the end
+    int len = strlen(loc) + 5;
+    char *stats_loc = malloc(len);
+    strcpy(stats_loc, loc);
+    stats_loc[len-1] = 0x00;
+
+    FILE* re = fopen(strcat(stats_loc, ".dat"), mode);
+    free(stats_loc);
+    return re;
+}
 
 char* read_long(FILE* fptr) {
     int n = 1;
@@ -20,20 +31,21 @@ char* read_long(FILE* fptr) {
     return text;
 }
 
-bool map_load_stats(map_data *map, bool print) {
-    // Open stats file, which is just the xsb map file with .dat at the end
-    FILE *statptr;
-    int len = strlen(map->loc) + 5;
-    char *stats_loc = malloc(len);
-    memset(stats_loc, 0x00, len);
-    strcpy(stats_loc, map->loc);
+bool map_load_stats(map_data *map) {
+    FILE* statptr = get_stat_file(map->loc, "r");
+    if (statptr == NULL) return  false;
 
-    if ((statptr = fopen(strcat(stats_loc, ".dat"), "r")) == NULL) return false;
-
+    fame* curr = map->fame_list;
+    while (1) {
+        if (fscanf(statptr, "%d ", &(curr->move)) == EOF) break;
+        curr->name = read_long(statptr);
+        get_next_fame(curr);
+        curr = curr->next;
+    }
     // First number is always the record
-    fscanf(statptr, "%d ", &(map->best));
+    fscanf(statptr, "%d ", &(map->fame_list->move));
 
-    // If we're here to print the leaderboard and not just read the record:
+    /* If we're here to print the leaderboard and not just read the record:
     if (print) {
         econio_clrscr();
         print_logo();
@@ -41,9 +53,8 @@ bool map_load_stats(map_data *map, bool print) {
 
     }
 
-    // TODO: Finish leaderboard printing
+    // TODO: Finish leaderboard printing */
 
-    free(stats_loc);
     fclose(statptr);
     return true;
 }
@@ -61,6 +72,9 @@ void map_init(map_data* map, char* loc){
     map->moves->prev = NULL;
     map->moves->next = NULL;
     map->moves->type = inv;
+    map->fame_list = malloc(sizeof(fame));
+    map->fame_list->next = NULL;
+    map->fame_list->move = 0;
 }
 
 bool meta_exists(char* meta, FILE* fptr) {
@@ -94,7 +108,7 @@ map_data* map_open(char* loc) {
     // Reset the file read head for potential future use (resets)
     fseek(map->mapptr, 0, 0);
 
-    map_load_stats(map, false);
+    map_load_stats(map);
 
     return map;
 }
@@ -151,6 +165,15 @@ void map_close(map_data *map) {
     }
     free(last);
 
+    fame *prev_fame = NULL, *curr_fame = map->fame_list;
+    while (curr_fame != NULL && curr_fame->move != 0){
+        prev_fame = curr_fame;
+        curr_fame = curr_fame->next;
+        free(prev_fame->name);
+        free(prev_fame);
+    }
+
+    free(curr_fame);
     fclose(map->mapptr);
     free(map->loc);
     free(map->title);

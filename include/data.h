@@ -16,6 +16,12 @@ typedef struct move {
     struct move *prev, *next;
 } move;
 
+typedef struct fame {
+    char* name;
+    int move;
+    struct fame *next;
+} fame;
+
 typedef char map_char[1];
 
 typedef struct {
@@ -49,8 +55,13 @@ typedef struct {
     int box;
     map_char *map;
     move *moves;
+    fame *fame_list;
 } map_data;
 
 move* get_next_move(move* prev);
+
+fame* get_next_fame(fame* prev);
+
+fame* insert_fame_at(fame* first, int n, char* name, int move);
 
 #endif //SCHOKOBAN_DATA_H
