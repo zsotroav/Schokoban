@@ -25,25 +25,18 @@ typedef struct fame {
 typedef char map_char[1];
 
 typedef struct {
+    bool functional;
     char* title;
     char* author;
     /**
      * @brief Location of the map data file
      */
     char* loc;
-    /**
-     * @brief Pointer to the map data file
-     */
-    FILE *mapptr;
 
     int player_x;
     int player_y;
     int width;
     int height;
-    /**
-     * @brief Record number of moves for this level
-     */
-    int best;
 
     /**
      * @brief Number of moves made

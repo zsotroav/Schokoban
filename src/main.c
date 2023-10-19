@@ -18,7 +18,7 @@ int main(void) {
         return -1;
     }
 
-    while (game_wait_input(map));
+    while (game_wait_input(map) && map->functional);
 
     game_end(map);
     return 0;

@@ -59,13 +59,27 @@ bool map_load_stats(map_data *map) {
     return true;
 }
 
+bool map_save_stats(map_data *map) {
+    FILE* statptr = get_stat_file(map->loc, "w");
+    if (statptr == NULL) return  false;
+
+    fame* curr = map->fame_list;
+    while (curr->move != 0) {
+        fprintf(statptr, "%d %s\n", curr->move, curr->name);
+        curr = curr->next;
+    }
+
+    fclose(statptr);
+    return true;
+}
+
+// TODO: move to data.c
 void map_init(map_data* map, char* loc){
     // Initialize map metadata
     map->loc = malloc(strlen(loc) + 1);
     strcpy(map->loc, loc);
     map->width = 0;
     map->height = 0;
-    map->best = 0;
     map->move_cnt = 0;
     map->box = 0;
     map->moves = malloc(sizeof(move));
@@ -75,6 +89,7 @@ void map_init(map_data* map, char* loc){
     map->fame_list = malloc(sizeof(fame));
     map->fame_list->next = NULL;
     map->fame_list->move = 0;
+    map->functional = true;
 }
 
 bool meta_exists(char* meta, FILE* fptr) {
@@ -89,34 +104,35 @@ map_data* map_open(char* loc) {
     map_init(map, loc);
 
     // Open XSB for reading
-    map->mapptr = fopen(loc, "r");
-    if (map->mapptr == NULL) return NULL;
+    FILE* mapptr = fopen(loc, "r");
+    if (mapptr == NULL) return NULL;
 
-    fscanf(map->mapptr, "%d,%d\n", &map->width, &map->height);
+    fscanf(mapptr, "%d,%d\n", &map->width, &map->height);
     if (map->width == 0 || map->height == 0) return NULL;
 
     // malloc the required space for the map data
     map->map = malloc(map->width * map->height);
     memset(map->map, 0x00, map->width * map->height);
 
-    map_load(map);
+    map_load(map, mapptr);
 
     // no T because that was already read above
-    if (meta_exists("itle: ", map->mapptr)) map->title = read_long(map->mapptr);
-    if (meta_exists("Author: ", map->mapptr)) map->author = read_long(map->mapptr);
+    if (meta_exists("itle: ", mapptr)) map->title = read_long(mapptr);
+    if (meta_exists("Author: ", mapptr)) map->author = read_long(mapptr);
 
     // Reset the file read head for potential future use (resets)
-    fseek(map->mapptr, 0, 0);
+    fseek(mapptr, 0, 0);
 
     map_load_stats(map);
 
+    fclose(mapptr);
     return map;
 }
 
-void map_load(map_data* map) {
+void map_load(map_data* map, FILE* mapptr) {
     char c;
     int i = 0, j = 0;
-    while(( c = fgetc(map->mapptr) ) != EOF ) {
+    while(( c = fgetc(mapptr) ) != EOF ) {
         if (c == '\n') {
             i++;
             j = 0;
@@ -133,6 +149,12 @@ void map_load(map_data* map) {
 }
 
 void map_reset(map_data *map) {
+    FILE* mapptr = fopen(map->loc, "r");
+    if (mapptr == NULL) {
+        map->functional = false;
+        return;
+    }
+
     // Reset values
     map->move_cnt = 0;
     map->box = 0;
@@ -148,12 +170,12 @@ void map_reset(map_data *map) {
     last->type = inv;
 
     // Completely reload map
-    fscanf(map->mapptr, "%*d,%*d\n");
-    map_load(map);
+    fscanf(mapptr, "%*d,%*d\n");
+    map_load(map, mapptr);
 
     print_all(map);
 
-    fseek(map->mapptr, 0, 0);
+    fclose(mapptr);
 }
 
 void map_close(map_data *map) {
@@ -174,7 +196,6 @@ void map_close(map_data *map) {
     }
 
     free(curr_fame);
-    fclose(map->mapptr);
     free(map->loc);
     free(map->title);
     free(map->author);

@@ -20,6 +20,12 @@ map_data *game_init(char* level) {
 void game_end(map_data *map) {
     // TODO: Update best score (WIP)
 
+    if (!map->functional){
+        printf("An internal exception occurred. Please try again later.");
+        map_close(map);
+        return;
+    }
+
     if(map->box != 0) {
         map_close(map);
         return;
@@ -36,6 +42,7 @@ void game_end(map_data *map) {
             switch (econio_getch()) {
                 case 'y':
                     map->fame_list = insert_fame_at(map->fame_list, 0, "Da best", map->move_cnt);
+                    if (!map_save_stats(map)) printf("Failed to save leaderboard!");
                     // TODO: Read name from stdin
                 case 'n': waiting = false; break;
             }
@@ -114,7 +121,7 @@ bool game_wait_input(map_data *map){
         case KEY_RIGHT: game_mv(map, false, true); break;
         case 'r': map_reset(map); break;
         case 'u': game_undo(map); break;
-        case KEY_F11: map->box = 0; return  false;  // Cheat mode
+        case '0': map->box = 0; return  false;  // Cheat mode
         case KEY_F12: print_all(map); break;        // Re-print (debug)
         case KEY_ESCAPE: return false;
     }

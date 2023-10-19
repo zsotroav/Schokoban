@@ -5,6 +5,12 @@
 
 #define map_is_valid_char(c) strchr("@+$*#._- ", c)
 
+/**
+ * @brief Save the stats of the map into the appropriate data file
+ * @param map Map data
+ * @return Success or Failure to save.
+ */
+bool map_save_stats(map_data *map);
 
 /**
  * @brief Opens the given map file
@@ -17,8 +23,7 @@ map_data* map_open(char *loc);
  * @brief Loads the contents of the map. Must always be called after map_open()
  * @return Success or Failure to load map data.
  */
-void map_load(map_data *map);
-
+void map_load(map_data *map, FILE* mapptr);
 
 void map_reset(map_data *map);
 /**
