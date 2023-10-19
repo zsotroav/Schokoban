@@ -51,6 +51,13 @@ typedef struct {
     fame *fame_list;
 } map_data;
 
+/**
+ * @brief Create a new map instance with default values
+ * @param loc Default value for map_data.loc
+ * @return Created and memory allocated map_data pointer
+ */
+map_data* map_init(char* loc);
+
 move* get_next_move(move* prev);
 
 fame* get_next_fame(fame* prev);

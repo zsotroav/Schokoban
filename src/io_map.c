@@ -73,25 +73,6 @@ bool map_save_stats(map_data *map) {
     return true;
 }
 
-// TODO: move to data.c
-void map_init(map_data* map, char* loc){
-    // Initialize map metadata
-    map->loc = malloc(strlen(loc) + 1);
-    strcpy(map->loc, loc);
-    map->width = 0;
-    map->height = 0;
-    map->move_cnt = 0;
-    map->box = 0;
-    map->moves = malloc(sizeof(move));
-    map->moves->prev = NULL;
-    map->moves->next = NULL;
-    map->moves->type = inv;
-    map->fame_list = malloc(sizeof(fame));
-    map->fame_list->next = NULL;
-    map->fame_list->move = 0;
-    map->functional = true;
-}
-
 bool meta_exists(char* meta, FILE* fptr) {
     char params[10] = {0};
     fread(params, 1, strlen(meta), fptr);
@@ -100,8 +81,7 @@ bool meta_exists(char* meta, FILE* fptr) {
 
 map_data* map_open(char* loc) {
     // Create and initialize map data
-    map_data *map = malloc(sizeof *map);
-    map_init(map, loc);
+    map_data *map = map_init(loc);
 
     // Open XSB for reading
     FILE* mapptr = fopen(loc, "r");
