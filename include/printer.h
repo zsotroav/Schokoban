@@ -3,7 +3,7 @@
 
 #include "data.h"
 
-#define cursor_bottom(map) econio_gotoxy(0, 15 + map->height)
+#define cursor_bottom(map) econio_gotoxy(0, 13 + map->height)
 
 /**
  * @brief Prints the full game to the screen
@@ -31,11 +31,11 @@ void print_xy(map_data *map, int x, int y);
  */
 void print_xy_offset(map_data *map, int x, int y);
 
-void print_logo();
-
-void print_metadata(map_data* map);
-
-void print_stats(int best);
+/**
+ * @brief Print the logo and available map metadata (title, author, record)
+ * @param map Pointer to map data
+ */
+void print_meta(map_data* map);
 
 /**
  * @brief Update the number of moves displayed

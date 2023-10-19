@@ -6,11 +6,10 @@
 
 void print_all(map_data *map) {
     econio_clrscr();
-    print_logo();
-    print_metadata(map);
-    print_stats(map->fame_list->move);
+    print_meta(map);
     print_map_all(map);
-    print_controls();
+    // Only print controls if the map isn't too tall
+    if (map->height < 12) print_controls();
 }
 
 void print_map_all(map_data *map) {
@@ -50,44 +49,36 @@ void print_xy(map_data *map, int x, int y) {
 }
 
 void print_xy_offset(map_data *map, int x, int y) {
-    econio_gotoxy(indent(map) + x, 6 + y);
+    econio_gotoxy(indent(map) + x, 4 + y);
     print_xy(map, x, y);
     econio_gotoxy(0, 14 + map->height );
 }
 
-void print_logo() {
-    printf("┏┓┏┓┓┏┏┓┓┏┓┏┓┳┓┏┓┳┓\n"
-           "┗┓┃ ┣┫┃┃┃┫ ┃┃┣┫┣┫┃┃\n"
-           "┗┛┗┛┛┗┗┛┛┗┛┗┛┻┛┛┗┛┗\n");
-}
+void print_meta(map_data* map) {
+    printf("┏┓┏┓┓┏┏┓┓┏┓┏┓┳┓┏┓┳┓   Puzzle: \n"
+           "┗┓┃ ┣┫┃┃┃┫ ┃┃┣┫┣┫┃┃   Record: \n"
+           "┗┛┗┛┛┗┗┛┛┗┛┗┛┻┛┛┗┛┗   Moves:  %d\n",
+           map->move_cnt);
+    econio_gotoxy(30, 1);
+    if (map->fame_list->move > 0) printf("%d", map->fame_list->move);
+    else printf("N/A");
 
-void print_metadata(map_data* map) {
-    if (map->title[0] == '\0') return;
-
-    econio_gotoxy(22, 0);
-    printf("Map: ");
-    econio_gotoxy(22, 1);
+    /* Title is always set, at worst it's just the file name
+     * We print it here because it's easier to already have the cursor at
+     * the correct position if and when we also want to print the author
+     * (We don't have to calculate where the cursor needs to go)
+     */
+    econio_gotoxy(30, 0);
     printf("%s", map->title);
+    if (map->author[0] != '\0') printf(" by %s", map->author);
 
-    if (map->author[0] != '\0') {
-        econio_gotoxy(22, 2);
-        printf("by %s", map->author);
-    }
-    econio_gotoxy(0, 3);
-}
-
-void print_stats(int best) {
-    printf("    Moves:   0     \n"
-           "    Best:  %3d   \n\n", best);
-    if (best == 0) {
-        econio_gotoxy(11, 4);
-        printf("N/A\n\n");
-    }
+    // Reset cursor to not mess with other printer functions
+    econio_gotoxy(0, 4);
 }
 
 void print_update_move(int new){
-    econio_gotoxy(11, 3);
-    printf("%3d", new);
+    econio_gotoxy(30, 2);
+    printf("%d", new);
 }
 
 void print_controls() {
