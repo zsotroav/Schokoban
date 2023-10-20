@@ -43,6 +43,9 @@ void print_meta(map_data* map);
  */
 void print_update_move(int new);
 
+/**
+ * @brief Prints the control hints to the screen at current cursor position
+ */
 void print_controls();
 
 #endif //SCHOKOBAN_PRINTER_H

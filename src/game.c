@@ -55,7 +55,7 @@ void game_end(map_data *map) {
     map_close(map);
 }
 
-void game_undo(map_data *map){
+void game_undo(map_data *map) {
     move* prev = map->moves;
     go_to_last_move(prev);
 

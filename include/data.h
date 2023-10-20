@@ -25,6 +25,9 @@ typedef struct fame {
 typedef char map_char[1];
 
 typedef struct {
+    /**
+     * @brief Indicate if an internal error was encountered mid-game
+     */
     bool functional;
     char* title;
     char* author;
