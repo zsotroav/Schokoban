@@ -97,11 +97,8 @@ map_data* map_open(char* loc) {
     map_load(map, mapptr);
 
     // no T because that was already read above
-    if (meta_exists("itle: ", mapptr)) map->title = read_long(mapptr);
-    if (meta_exists("Author: ", mapptr)) map->author = read_long(mapptr);
-
-    // Reset the file read head for potential future use (resets)
-    fseek(mapptr, 0, 0);
+    map->title  = meta_exists("itle: ", mapptr)   ? read_long(mapptr) : loc;
+    map->author = meta_exists("Author: ", mapptr) ? read_long(mapptr) : calloc(1, sizeof(char));
 
     map_load_stats(map);
 
