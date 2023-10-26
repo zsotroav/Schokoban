@@ -11,7 +11,7 @@ FILE* get_stat_file(char* loc, char* mode) {
     int len = strlen(loc) + 5;
     char *stats_loc = malloc(len);
     strcpy(stats_loc, loc);
-    stats_loc[len-1] = 0x00;
+    stats_loc[len-1] = '\0';
 
     FILE* re = fopen(strcat(stats_loc, ".dat"), mode);
     free(stats_loc);
@@ -26,7 +26,7 @@ char* read_long(FILE* fptr) {
         text = realloc(text, (++n+1) * sizeof(char));
         //if (text == NULL) printf("Error");
     }
-    text[n-1] = 0x00;
+    text[n-1] = '\0';
 
     return text;
 }

@@ -48,4 +48,10 @@ void print_update_move(int new);
  */
 void print_controls();
 
+/**
+ * @brief Print the leaderboard of the map
+ * @param map Pointer to map data
+ */
+void print_leaderboard(map_data* map);
+
 #endif //SCHOKOBAN_PRINTER_H

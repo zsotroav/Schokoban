@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "game.h"
 #include "data.h"
+#include "printer.h"
 #ifdef _WIN32
     #include <windows.h>
 #endif
@@ -20,6 +21,8 @@ int main(void) {
 
     while (game_wait_input(map) && map->functional);
 
+    print_leaderboard(map);
     game_end(map);
+
     return 0;
 }

@@ -2,6 +2,7 @@
 #include "data.h"
 #include "econio.h"
 #include <stdio.h>
+#include <string.h>
 
 
 void print_all(map_data *map) {
@@ -89,4 +90,45 @@ void print_controls() {
            "╔═══╗╔═══╗╔═══╗       ╔═══╗\n"
            "║ A ║║ S ║║ D ║       ║ U ║\n"
            "╚═══╝╚═══╝╚═══╝       ╚═══╝\n");
+}
+
+void printnat(int x, int y, int n, char* c){
+    econio_gotoxy(x, y);
+    for (int i = 0; i < n; ++i) printf("%s", c);
+}
+
+void printat(int x, int y, char* c){
+    econio_gotoxy(x, y);
+    printf("%s", c);
+}
+
+void print_leaderboard(map_data* map) {
+    econio_clrscr();
+    print_meta(map);
+    fame* curr = map->fame_list;
+
+    int max = strlen(curr->name), n = 0;
+    printf("╔══════╤\n"
+           "║  %3d │ %s\n"
+           "╟──────┼\n", curr->move, curr->name);
+    curr = curr->next;
+    while(curr->move != 0) {
+        int l = strlen(curr->name);
+        if (l > max) max = l;
+        printf("║  %3d │ %s\n", curr->move, curr->name);
+        curr = curr->next;
+        n++;
+    }
+    max += 5;
+    printnat(8, 4, max, "═");
+    printf("╕");
+    printnat(8, 6, max, "─");
+
+    econio_gotoxy(0, n + 7);
+    printf("╙──────┴");
+    for (int i = 0; i < n + 2; ++i) printat(max + 8, i + 5, "│");
+    printnat(8, n + 7, max, "─");
+    printf("┘");
+    econio_gotoxy(0, 20);
+
 }
