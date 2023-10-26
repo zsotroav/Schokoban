@@ -32,7 +32,7 @@ The project follows a simple folder structure with C source code in the
 ```
 schokoban
 ├── src
-|   ├── debugmalloc.c   // Library code
+|   ├── data.c          // Basic data handling
 |   ├── econio.c        // Library code
 |   ├── game.c          // Most of the game logic's code
 |   ├── io_map.c        // Handling map reading
@@ -41,24 +41,25 @@ schokoban
 ├── include
 |   ├── data.h
 |   ├── debugmalloc.h
+│   ├── ECONIO_LICENSE  // MIT License file for the econio library
 │   ├── econio.h
 │   ├── game.h
 |   ├── io_map.h
-│   ├── ECONIO_LICENSE  // MIT License file for the econio library
 |   └── printer.h
 ├── .gitignore
 ├── CMakeLists.txt
 ├── DEV_DOC.md
 ├── econio_readme.md    // Readme for econio lib, may get removed in the future
-└── LICENSE             // GPL-3.0 (License file)
+├── LICENSE             // GPL-3.0 (License file)
+├── spec_ui.png
+└── spec.md             // Specifications for the game
 ```
 
 ### Used external resources
 - Libraries:
   1. [c-econio](https://infoc.eet.bme.hu/megjelenites/c-econio.zip) 
      by Zoltan Czirkos. [MIT License](include/ECONIO_LICENSE)
-  2. [debugmalloc](http://www.3d-scene.hu/csuli/debugmalloc/debugmalloc.c) 
-     ([.h](http://www.3d-scene.hu/csuli/debugmalloc/debugmalloc.h))
+  2. [debugmalloc](https://infoc.eet.bme.hu/debugmalloc/debugmalloc.h)
 - Code snippets: Noted in source if applicable
 - General reference documents:
   1. [Sokoban.org](http://sokoban.org/about_sokoban.php) for game rules 

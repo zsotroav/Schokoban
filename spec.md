@@ -160,4 +160,4 @@ ulUdrruRRxD
 ```
 
 ## Images
-![UI Example](.\spec_ui.png)
+![UI Example](spec_ui.png)
