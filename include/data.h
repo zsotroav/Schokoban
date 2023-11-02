@@ -11,6 +11,8 @@
 
 typedef enum { L, U, R, D, l, u, r, d, x, inv } move_type;
 
+typedef enum { ARCADE = 0, FREE = 1, CUSTOM = 2, INV = -1 } game_type;
+
 typedef struct move {
     move_type type;
     struct move *prev, *next;
@@ -29,6 +31,11 @@ typedef struct {
      * @brief Indicate if an internal error was encountered mid-game
      */
     bool functional;
+    game_type game_type;
+    /**
+     * @brief Level number used if the game type is arcade
+     */
+    int level;
     char* title;
     char* author;
     /**
