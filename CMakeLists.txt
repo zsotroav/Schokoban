@@ -8,9 +8,9 @@ include_directories(src)
 
 add_executable(schokoban
         src/main.c
-        include/debugmalloc.h
-        include/econio.h
-        src/econio.c
+        include/lib/debugmalloc.h
+        include/lib/econio.h
+        include/lib/econio.c
         include/io_map.h
         src/io_map.c
         include/data.h

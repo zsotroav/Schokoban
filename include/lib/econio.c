@@ -253,8 +253,6 @@ static int rawgetch() {
     return fgetc(stdin);
 }
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wchar-subscripts"
 int econio_getch() {
     static struct {
         char const *escape;
@@ -324,7 +322,6 @@ int econio_getch() {
             return unixkeycodes[i].key;
     return KEY_UNKNOWNKEY;
 }
-#pragma GCC diagnostic pop
 
 
 void econio_sleep(double sec) {

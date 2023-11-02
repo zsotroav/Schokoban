@@ -1,6 +1,6 @@
 #include "printer.h"
 #include "data.h"
-#include "econio.h"
+#include "lib/econio.h"
 #include <stdio.h>
 #include <string.h>
 

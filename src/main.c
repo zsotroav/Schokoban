@@ -1,10 +1,11 @@
 #include <stdio.h>
 #include "game.h"
-#include "data.h"
+#include "lib/debugmalloc.h"
 #include "printer.h"
 #ifdef _WIN32
     #include <windows.h>
 #endif
+
 
 int main(void) {
     #ifdef _WIN32

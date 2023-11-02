@@ -1,5 +1,5 @@
 #include "data.h"
-#include "debugmalloc.h"
+#include "lib/debugmalloc.h"
 
 map_data* map_init(char* loc) {
     map_data* map = malloc(sizeof(map_data));

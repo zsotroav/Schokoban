@@ -4,7 +4,7 @@
 #include "io_map.h"
 #include "printer.h"
 #include "data.h"
-#include "debugmalloc.h"
+#include "lib/debugmalloc.h"
 
 FILE* get_stat_file(char* loc, char* mode) {
     // Open stats file, which is just the xsb map file with .dat at the end

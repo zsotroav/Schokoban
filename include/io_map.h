@@ -47,4 +47,4 @@ void map_reset(map_data *map);
 void map_close(map_data *map);
 
 
-#endif //SCHOKOBAN_IO_MAP_H
+#endif // SCHOKOBAN_IO_MAP_H

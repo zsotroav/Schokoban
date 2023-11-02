@@ -1,7 +1,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include "data.h"
-#include "econio.h"
+#include "lib/econio.h"
 #include "game.h"
 #include "io_map.h"
 #include "printer.h"
