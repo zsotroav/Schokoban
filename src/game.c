@@ -59,8 +59,21 @@ void game_undo(map_data *map) {
     move* prev = map->moves;
     go_to_last_move(prev);
 
+    // No undo before the first move
+    if (prev->type == inv) return;
+
     int x_off = 0, y_off = 0;
     bool box = false;
+
+    int i = 0;
+    while (prev->type == x) {
+        ++i;
+        prev = prev->prev;
+    }
+    for (int j = 0; j < i; ++j) {
+        if (prev->prev == NULL) return;
+        prev = prev->prev;
+    }
 
     switch (prev->type) {
         case L: box = true;
@@ -73,6 +86,7 @@ void game_undo(map_data *map) {
         case d: y_off = -1; break;
         default: return;
     }
+
     // Pay attention if we were on a goal or not
     set_xy(map, map->player_x, map->player_y,
            (get_xy(map, map->player_x, map->player_y) == '+' ? '.' : ' '));
@@ -100,8 +114,10 @@ void game_undo(map_data *map) {
     print_xy_offset(map, map->player_x, map->player_y);
     print_xy_offset(map, (map->player_x + x_off), (map->player_y + y_off));
 
+    go_to_last_move(prev);
     move* curr = get_next_move(prev);
     curr->type = x;
+
     print_update_move(++map->move_cnt);
     map->player_x += x_off;
     map->player_y += y_off;
