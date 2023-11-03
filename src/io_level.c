@@ -6,6 +6,7 @@
 
 char* io_level_fullpath(int id) {
     char* map_name = io_level_get(CFG_MAP_LOC, id);
+    if (map_name == NULL) return NULL;
 
     char* map_loc = malloc(( strlen(map_name) + strlen(CFG_MAP_LOC) + 1) * sizeof(char));
     strcpy(map_loc, CFG_MAP_LOC);

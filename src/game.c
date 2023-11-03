@@ -107,7 +107,7 @@ void game_undo(map_data *map) {
     map->player_y += y_off;
 }
 
-bool game_wait_input(map_data *map){
+bool game_wait_input(map_data *map) {
     while (!econio_kbhit()) econio_sleep(0.2);
 
     switch (econio_getch()) {

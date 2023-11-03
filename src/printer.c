@@ -130,5 +130,4 @@ void print_leaderboard(map_data* map) {
     printnat(8, n + 7, max, "─");
     printf("┘");
     econio_gotoxy(0, 20);
-
 }

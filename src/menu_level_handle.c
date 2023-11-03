@@ -77,6 +77,8 @@ int menu_level_open() {
     int loc = 0;
     highlight(loc, page, max, true);
 
+    while (econio_kbhit()) { econio_getch(); econio_sleep(0.2); }
+
     while(menu_level_move(&loc, &page, max)) ;
 
     return loc < 0 ? -1 : page*10 + loc;

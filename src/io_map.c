@@ -45,16 +45,6 @@ bool map_load_stats(map_data *map) {
     // First number is always the record
     fscanf(statptr, "%d ", &(map->fame_list->move));
 
-    /* If we're here to print the leaderboard and not just read the record:
-    if (print) {
-        econio_clrscr();
-        print_logo();
-        printf("    LEADERBOARD\n\nLevel: %s\n%3d ", map->title, map->best);
-
-    }
-
-    // TODO: Finish leaderboard printing */
-
     fclose(statptr);
     return true;
 }
@@ -80,12 +70,12 @@ bool meta_exists(char* meta, FILE* fptr) {
 }
 
 map_data* map_open(char* loc) {
-    // Create and initialize map data
-    map_data *map = map_init(loc);
-
     // Open XSB for reading
     FILE* mapptr = fopen(loc, "r");
     if (mapptr == NULL) return NULL;
+
+    // Create and initialize map data
+    map_data *map = map_init(loc);
 
     fscanf(mapptr, "%d,%d\n", &map->width, &map->height);
     if (map->width == 0 || map->height == 0) return NULL;

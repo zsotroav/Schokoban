@@ -3,7 +3,7 @@
 #include "lib/econio.h"
 #include "menu_main_printer.h"
 
-void menu_print_highlighted(int id, bool highlighted) {
+void menu_main_print_highlighted(int id, bool highlighted) {
     econio_textcolor(highlighted ? COL_LIGHTCYAN : COL_RESET);
     switch (id) {
         case 0:
@@ -30,12 +30,20 @@ void menu_print_highlighted(int id, bool highlighted) {
             econio_gotoxy(11, 17);
             printf("╚═════════════╝");
             break;
+        default:
+            econio_gotoxy(12, 19);
+            printf("╔═══════════╗");
+            econio_gotoxy(12, 20);
+            printf("║ EXIT GAME ║");
+            econio_gotoxy(12, 21);
+            printf("╚═══════════╝");
+            break;
     }
     econio_gotoxy(0, 24);
     econio_textcolor(COL_RESET);
 }
 
-void menu_print_main() {
+void menu_main_print() {
     econio_clrscr();
     printf("    \n"
            "    \n"
@@ -55,7 +63,11 @@ void menu_print_main() {
            "    ║      ╔═════════════╗      │\n"
            "    ║      ║ CUSTOM MAPS ║      │\n"
            "    ║      ╚═════════════╝      │\n"
+           "    ║      ───────────────      │\n"
+           "    ║       ╔═══════════╗       │\n"
+           "    ║       ║ EXIT GAME ║       │\n"
+           "    ║       ╚═══════════╝       │\n"
            "    ║                           │\n"
            "    ╙───────────────────────────┘");
-    menu_print_highlighted(0, true);
+    menu_main_print_highlighted(0, true);
 }

@@ -1,8 +1,8 @@
 #include "data.h"
 #include "menu_main_printer.h"
-#include "menu_level_handle.h"
 #include "lib/econio.h"
 #include <stdbool.h>
+#include <stdlib.h>
 
 bool menu_main_move(game_type * type_loc) {
     econio_rawmode();
@@ -14,22 +14,24 @@ bool menu_main_move(game_type * type_loc) {
             if (*type_loc == 0) break;
             prev = *type_loc; --*type_loc; break;
         case 's': case KEY_DOWN:
-            if (*type_loc == 2) break;
+            if (*type_loc == 3) break;
             prev = *type_loc; ++*type_loc; break;
         case ' ': case KEY_ENTER:
             // Selection finished, break out of loop
+            if (*type_loc == 3) exit(0);
             return false;
         default: return true;
     }
 
-    menu_print_highlighted(prev, false);
-    menu_print_highlighted(*type_loc, true);
+    menu_main_print_highlighted(prev, false);
+    menu_main_print_highlighted(*type_loc, true);
 
     return true;
 }
 
 game_type menu_main_open() {
-    menu_print_main();
+    menu_main_print();
+    while (econio_kbhit()) { econio_getch(); econio_sleep(0.2); }
 
     game_type type = 0;
     while (menu_main_move(&type)) ;
