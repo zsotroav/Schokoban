@@ -5,7 +5,6 @@
 #include <stdlib.h>
 
 bool menu_main_move(game_type * type_loc) {
-    econio_rawmode();
     while (!econio_kbhit()) econio_sleep(0.2);
     int prev = -1;
 

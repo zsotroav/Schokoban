@@ -31,7 +31,6 @@ typedef struct {
      * @brief Indicate if an internal error was encountered mid-game
      */
     bool functional;
-    game_type game_type;
     /**
      * @brief Level number used if the game type is arcade
      */
