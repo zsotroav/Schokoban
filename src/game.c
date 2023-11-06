@@ -73,6 +73,8 @@ void game_undo(map_data *map) {
     for (int j = 0; j < i; ++j) {
         if (prev->prev == NULL) return;
         prev = prev->prev;
+        if (prev->type == x)
+            j -=2;
     }
 
     switch (prev->type) {
