@@ -3,6 +3,14 @@
 
 #include <stdbool.h>
 
+
+/**
+ * @brief Print navigation block in level select menu
+ * @param direction ture: Right // false: Left
+ * @param color (econio) color to print with
+ */
+void menu_print_level_nav(bool direction, int color);
+
 /**
  * @brief Print a single item on the level screen
  * @param num Number to show
@@ -23,7 +31,7 @@ void menu_print_level_page(int page, int max);
  * @brief Print the full level selection screen
  * @param page Page to start printing at
  * @param max Maximum number of levels, any more is greyed out 00
- * @return
+ * @return Success/Failure
  */
 bool menu_print_level(int page, int max);
 

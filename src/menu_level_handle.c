@@ -7,7 +7,7 @@
 #define NUM(page, id) ((page) * (10) + (id) + (1))
 #define OVER(page, id, max) (bool)((max) < (NUM((page), (id))))
 
-void highlight(int id, int page, int max, bool active) {
+void menu_level_highlight(int id, int page, int max, bool active) {
     if (id < 0) return;
     menu_print_level_item(OVER(page, id, max) ? 0 : NUM(page, id),
                           active ? OVER(page, id, max) ? COL_BLUE : COL_LIGHTCYAN
@@ -62,8 +62,8 @@ bool menu_level_move(int* loc, int* page, int max) {
     }
 
     // Update the UI highlights
-    highlight(*loc, *page, max, true);
-    highlight(prev, *page, max, false);
+    menu_level_highlight(*loc, *page, max, true);
+    menu_level_highlight(prev, *page, max, false);
 
     // True --> continue the loop because we aren't done selecting yet
     return true;
@@ -75,7 +75,7 @@ int menu_level_open() {
     if (!menu_print_level(page, max)) return -1;
 
     int loc = 0;
-    highlight(loc, page, max, true);
+    menu_level_highlight(loc, page, max, true);
 
     while (econio_kbhit()) { econio_getch(); econio_sleep(0.2); }
 

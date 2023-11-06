@@ -16,7 +16,7 @@ map_data* map_init(char* loc) {
     map->moves = malloc(sizeof(move));
     map->moves->prev = NULL;
     map->moves->next = NULL;
-    map->moves->type = inv;
+    map->moves->type = MV_INV;
 
     map->fame_list = malloc(sizeof(fame));
     map->fame_list->next = NULL;
@@ -26,20 +26,20 @@ map_data* map_init(char* loc) {
 
 move* get_next_move(move* prev) {
     while (prev->next != NULL) prev = prev->next;
-    if (prev->type == inv) return prev;
+    if (prev->type == MV_INV) return prev;
 
     move* curr = malloc(sizeof(move));
     prev->next = curr;
     curr->prev = prev;
     curr->next = NULL;
-    curr->type = inv;
+    curr->type = MV_INV;
     return curr;
 }
 
-fame* get_next_fame(fame* prev) {
+fame* add_new_fame(fame* prev) {
     fame* curr = malloc(sizeof(fame));
+    curr->next = prev->next;
     prev->next = curr;
-    curr->next = NULL;
     curr->name = NULL;
     curr->move = 0;
     return curr;

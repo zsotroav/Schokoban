@@ -7,7 +7,6 @@
 #include "lib/debugmalloc.h"
 
 FILE* get_stat_file(char* loc, char* mode) {
-    // Open stats file, which is just the xsb map file with .dat at the end
     int len = strlen(loc) + 5;
     char *stats_loc = malloc(len);
     strcpy(stats_loc, loc);
@@ -39,7 +38,7 @@ bool map_load_stats(map_data *map) {
     while (1) {
         if (fscanf(statptr, "%d ", &(curr->move)) == EOF) break;
         curr->name = read_long(statptr);
-        get_next_fame(curr);
+        add_new_fame(curr);
         curr = curr->next;
     }
     // First number is always the record
@@ -69,6 +68,7 @@ bool meta_exists(char* meta, FILE* fptr) {
     return (strcmp(params, meta) == 0);
 }
 
+// TODO: Max width
 map_data* map_open(char* loc) {
     // Open XSB for reading
     FILE* mapptr = fopen(loc, "r");
@@ -81,7 +81,7 @@ map_data* map_open(char* loc) {
     if (map->width == 0 || map->height == 0) return NULL;
 
     // malloc the required space for the map data
-    map->map = malloc(map->width * map->height);
+    map->map = malloc((map->width * map->height * sizeof(char)));
     memset(map->map, 0x00, map->width * map->height);
 
     map_load(map, mapptr);
@@ -134,7 +134,7 @@ void map_reset(map_data *map) {
         free(last->next);
     }
     last->next = NULL;
-    last->type = inv;
+    last->type = MV_INV;
 
     // Completely reload map
     fscanf(mapptr, "%*d,%*d\n");

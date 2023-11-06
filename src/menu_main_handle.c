@@ -1,10 +1,9 @@
+#include <stdbool.h>
 #include "data.h"
 #include "menu_main_printer.h"
 #include "lib/econio.h"
-#include <stdbool.h>
-#include <stdlib.h>
 
-bool menu_main_move(game_type * type_loc) {
+bool menu_main_move(game_type* type_loc) {
     while (!econio_kbhit()) econio_sleep(0.2);
     int prev = -1;
 
@@ -15,10 +14,7 @@ bool menu_main_move(game_type * type_loc) {
         case 's': case KEY_DOWN:
             if (*type_loc == 3) break;
             prev = *type_loc; ++*type_loc; break;
-        case ' ': case KEY_ENTER:
-            // Selection finished, break out of loop
-            if (*type_loc == 3) exit(0);
-            return false;
+        case ' ': case KEY_ENTER: return false;
         default: return true;
     }
 

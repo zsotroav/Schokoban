@@ -1,7 +1,7 @@
+#include <dirent.h>
 #include "config.h"
 #include "lib/debugmalloc.h"
 #include "io_level.h"
-#include <dirent.h>
 
 
 char* io_level_fullpath(int id) {

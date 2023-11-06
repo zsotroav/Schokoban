@@ -5,6 +5,16 @@
 #include <string.h>
 
 
+void printnat(int x, int y, int n, char* c) {
+    econio_gotoxy(x, y);
+    for (int i = 0; i < n; ++i) printf("%s", c);
+}
+
+void printat(int x, int y, char* c) {
+    econio_gotoxy(x, y);
+    printf("%s", c);
+}
+
 void print_all(map_data *map) {
     econio_clrscr();
     print_meta(map);
@@ -69,8 +79,7 @@ void print_meta(map_data* map) {
      * the correct position if and when we also want to print the author
      * (We don't have to calculate where the cursor needs to go)
      */
-    econio_gotoxy(30, 0);
-    printf("%s", map->title);
+    printat(30, 0, map->title);
     if (map->author[0] != '\0') printf(" by %s", map->author);
 
     // Reset cursor to not mess with other printer functions
@@ -92,15 +101,6 @@ void print_controls() {
            "╚═══╝╚═══╝╚═══╝       ╚═══╝\n");
 }
 
-void printnat(int x, int y, int n, char* c){
-    econio_gotoxy(x, y);
-    for (int i = 0; i < n; ++i) printf("%s", c);
-}
-
-void printat(int x, int y, char* c){
-    econio_gotoxy(x, y);
-    printf("%s", c);
-}
 
 void print_leaderboard(map_data* map) {
     econio_clrscr();

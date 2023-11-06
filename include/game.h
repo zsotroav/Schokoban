@@ -21,7 +21,7 @@ map_data* game_init(char* level);
 void game_end(map_data *map);
 
 /**
- * @brief Undo the last move made
+ * @brief Undo the last non-undo move made
  * @note Undo counts as a regular move and increases the move counter
  * @param map Pointer to map data
  */

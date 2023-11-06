@@ -60,32 +60,34 @@ void game_undo(map_data *map) {
     go_to_last_move(prev);
 
     // No undo before the first move
-    if (prev->type == inv) return;
+    if (prev->type == MV_INV) return;
 
     int x_off = 0, y_off = 0;
     bool box = false;
 
+    // Find the move we want to  undo
     int i = 0;
-    while (prev->type == x) {
+    while (prev->type == MV_UNDO) {
         ++i;
         prev = prev->prev;
     }
     for (int j = 0; j < i; ++j) {
         if (prev->prev == NULL) return;
         prev = prev->prev;
-        if (prev->type == x)
+        if (prev->type == MV_UNDO)
             j -=2;
     }
 
+    // Calculate what that undo should do
     switch (prev->type) {
-        case L: box = true;
-        case l: x_off = 1; break;
-        case U: box = true;
-        case u: y_off = 1; break;
-        case R: box = true;
-        case r: x_off = -1; break;
-        case D: box = true;
-        case d: y_off = -1; break;
+        case MV_L: box = true;
+        case MV_l: x_off = 1; break;
+        case MV_U: box = true;
+        case MV_u: y_off = 1; break;
+        case MV_R: box = true;
+        case MV_r: x_off = -1; break;
+        case MV_D: box = true;
+        case MV_d: y_off = -1; break;
         default: return;
     }
 
@@ -93,21 +95,18 @@ void game_undo(map_data *map) {
     set_xy(map, map->player_x, map->player_y,
            (get_xy(map, map->player_x, map->player_y) == '+' ? '.' : ' '));
 
-    set_xy(map, (map->player_x + x_off), (map->player_y + y_off),
-           (get_xy(map, (map->player_x + x_off), (map->player_y + y_off)) == '.' ? '+' : '@'));
+    set_xy_offset(map, x_off, y_off,
+           ((get_xy_offset(map, x_off, y_off)) == '.' ? '+' : '@'));
 
+    // If we moved a box, make sure it gets moved back as well
     if (box) {
-        bool was_goal = get_xy(map,
-                               (map->player_x + (x_off * -1)),
-                               (map->player_y + (y_off * -1)))  == '*';
+        bool was_goal = get_xy_offset(map, (x_off * -1), (y_off * -1))  == '*';
         bool to_goal = get_xy(map, map->player_x, map->player_y) == '.';
-        set_xy(map, (map->player_x + (x_off * -1)), (map->player_y + (y_off * -1)),
-               (was_goal ? '.' : ' '));
+        set_xy_offset(map, (x_off * -1), (y_off * -1), (was_goal ? '.' : ' '));
 
         print_xy_offset(map, (map->player_x + (x_off * -1)), (map->player_y + (y_off * -1)));
 
-        set_xy(map, map->player_x, map->player_y,
-               (to_goal ? '*' : '$'));
+        set_xy(map, map->player_x, map->player_y, (to_goal ? '*' : '$'));
 
         if (was_goal) map->box++;
         if (to_goal) map->box--;
@@ -116,10 +115,12 @@ void game_undo(map_data *map) {
     print_xy_offset(map, map->player_x, map->player_y);
     print_xy_offset(map, (map->player_x + x_off), (map->player_y + y_off));
 
+    // Add the undo to the move list
     go_to_last_move(prev);
     move* curr = get_next_move(prev);
-    curr->type = x;
+    curr->type = MV_UNDO;
 
+    // Update move count and player location
     print_update_move(++map->move_cnt);
     map->player_x += x_off;
     map->player_y += y_off;
@@ -139,8 +140,8 @@ bool game_wait_input(map_data *map) {
         case KEY_RIGHT: game_mv(map, false, true); break;
         case 'r': map_reset(map); break;
         case 'u': game_undo(map); break;
-        case '0': map->box = 0; return  false;  // Cheat mode
-        case KEY_F12: print_all(map); break;        // Re-print (debug)
+        case '0': map->box = 0; return false;  // Cheat mode (debug)
+        case ' ': print_all(map); break;        // Re-print (debug)
         case KEY_ESCAPE: return false;
     }
 
@@ -155,11 +156,11 @@ void game_mv(map_data *map, bool ud, bool rd) {
     int y = (ud ? (rd ? 1 : -1) : 0);
 
     // No going out of bounds, even if the map isn't surrounded by walls
-    if (map->player_x + x < 0 || map->player_x + x > map->width) return;
-    if (map->player_y + y < 0 || map->player_y + y > map->height) return;
+    if (map->player_x + x < 0 || map->player_x + x > map->width ||
+        map->player_y + y < 0 || map->player_y + y > map->height) return;
 
-    char next =    get_xy(map, (map->player_x +   x), (map->player_y +   y));
-    char further = get_xy(map, (map->player_x + 2*x), (map->player_y + 2*y));
+    char next =    get_xy_offset(map,   x,   y);
+    char further = get_xy_offset(map, 2*x, 2*y);
 
     // No going through walls
     if (next == '#') return;
@@ -180,21 +181,19 @@ void game_mv(map_data *map, bool ud, bool rd) {
         // Keep the number of boxes on and off goals
         if (further == '.') map->box--;
         if (next == '*') map->box++;
-        set_xy(map, (map->player_x + 2*x), (map->player_y + 2*y),
-               (further == '.' ? '*' : '$'));
+        set_xy_offset(map, (2*x), (2*y), (further == '.' ? '*' : '$'));
         print_xy_offset(map, map->player_x + 2*x, map->player_y + 2*y);
 
-        curr->type = (ud ? (rd ? D : U) : (rd ? R : L));
+        curr->type = (ud ? (rd ? MV_D : MV_U) : (rd ? MV_R : MV_L));
     }
 
-    set_xy(map, (map->player_x + x), (map->player_y + y),
-           ((next == '.' ||  next == '*' )? '+' : '@'));
+    set_xy_offset(map, x, y, ((next == '.' ||  next == '*' )? '+' : '@'));
     print_xy_offset(map, (map->player_x + x), (map->player_y + y));
     map->player_x += x;
     map->player_y += y;
     print_update_move(++(map->move_cnt));
 
-    if (curr->type == inv) curr->type = (ud ? (rd ? d : u) : (rd ? r : l));
+    if (curr->type == MV_INV) curr->type = (ud ? (rd ? MV_d : MV_u) : (rd ? MV_r : MV_l));
 
     cursor_bottom(map);
 }

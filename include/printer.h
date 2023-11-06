@@ -3,6 +3,24 @@
 
 #include "data.h"
 
+
+/**
+ * @brief Print a given number of characters at a location
+ * @param x X (Horizontal) location
+ * @param y Y (Vertical) location
+ * @param n Number of times to print character
+ * @param c Character to print
+ */
+void printnat(int x, int y, int n, char* c);
+
+/**
+ * @brief Print a character at location
+ * @param x X (Horizontal) location)
+ * @param y Y (Vertical) location
+ * @param c Character to print
+ */
+void printat(int x, int y, char* c);
+
 #define cursor_bottom(map) econio_gotoxy(0, 13 + map->height)
 
 /**

@@ -1,10 +1,11 @@
+#include <stdbool.h>
 #include <stdio.h>
 #include "config.h"
 #include "data.h"
 #include "game.h"
+#include "menu_custom.h"
 #include "menu_level_handle.h"
 #include "menu_main_handle.h"
-#include "menu_custom.h"
 #include "io_level.h"
 #include "lib/debugmalloc.h"
 #include "lib/econio.h"
@@ -16,6 +17,7 @@
 
 bool game_master(game_type type, int* level) {
     char* map_loc =  type == CUSTOM ? menu_custom_open() : io_level_fullpath(*level);
+
     // Don't need to check map_loc for null because that would be redundant - the other functions handle it
     map_data *map = game_init(map_loc);
     if (map == NULL) {
@@ -27,8 +29,10 @@ bool game_master(game_type type, int* level) {
     }
     if (type != CUSTOM) map->level = *level;
 
+    // Main gameplay loop (get input and make sure we're still functional (no internal exceptions))
     while (game_wait_input(map) && map->functional);
 
+    // Always print the leaderboard at the end
     print_leaderboard(map);
     game_end(map);
     free(map_loc);
@@ -43,7 +47,7 @@ bool game_master(game_type type, int* level) {
     return true;
 }
 
-void menu() {
+bool menu() {
     int level = 0;
     game_type t = INV;
 
@@ -55,11 +59,14 @@ void menu() {
                 level = menu_level_open();
                 if (level == -1) { t = INV; break; }
                 break;
+            case EXIT: return false;
             default: break;
         }
     }
 
+    // Start the gameplay loop (allow for multiple levels to be played/replayed)
     while (game_master(t, &level)) ;
+    return true;
 }
 
 int main(void) {
@@ -70,7 +77,8 @@ int main(void) {
     econio_rawmode();
     econio_set_title("SCHOKOBAN");
 
-    while (1) { menu(); }
+    // Menu is the main loop, we keep the app loaded until the player explicitly quits
+    while ( menu() ) ;
 
     return 0;
 }
