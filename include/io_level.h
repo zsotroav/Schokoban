@@ -6,7 +6,8 @@
  * @param id ID of the map file
  * @return full (relative) path to the XSB
  */
-char* io_level_fullpath(int id);
+#define io_level_fullpath(id) io_level_get(CFG_MAP_LOC, (id))
+
 
 /**
  * @brief Get the number of xsb files in the directory

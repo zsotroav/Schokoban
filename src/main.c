@@ -16,7 +16,7 @@
 
 
 bool game_master(game_type type, int* level) {
-    char* map_loc =  type == CUSTOM ? menu_custom_open() : io_level_fullpath(*level);
+    char* map_loc =  type == CUSTOM ? menu_custom_open() : io_level_fullpath(*level + 1);
 
     // Don't need to check map_loc for null because that would be redundant - the other functions handle it
     map_data *map = game_init(map_loc);
