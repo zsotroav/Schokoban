@@ -50,13 +50,15 @@ void game_end(map_data *map) {
     printf("Map cleared!\n");
     // Best is always the first
     fame* curr = map->fame_list;
-    for (int i = 0; curr != NULL; ++i) {
+    int i;
+    for (i = 0; curr->move != 0 && curr != NULL; ++i) {
         if (map->move_cnt < curr->move) {
             fame_add(i, map);
             break;
         }
         curr = curr->next;
     }
+    if (i < 10 && (curr->move == 0 || curr == NULL)) fame_add(i, map);
     map_close(map);
 }
 

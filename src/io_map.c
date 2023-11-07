@@ -53,7 +53,7 @@ bool map_save_stats(map_data *map) {
     if (statptr == NULL) return  false;
 
     fame* curr = map->fame_list;
-    while (curr->move != 0) {
+    for (int i = 0; i < 10 && curr != NULL && curr->move != 0; ++i) {
         fprintf(statptr, "%d %s\n", curr->move, curr->name);
         curr = curr->next;
     }

@@ -107,6 +107,13 @@ void print_leaderboard(map_data* map) {
     print_meta(map);
     fame* curr = map->fame_list;
 
+    if (curr->move == 0) {
+        printf("╔════════════════════════════╕\n"
+               "║  The leaderboard is empty! │\n"
+               "╙────────────────────────────┘\n");
+        return;
+    }
+
     int max = strlen(curr->name), n = 0;
     printf("╔══════╤\n"
            "║  %3d │ %s\n"
