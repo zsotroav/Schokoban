@@ -62,6 +62,12 @@ typedef struct {
 } map_data;
 
 /**
+ * @brief Read long string from stdin
+ * @return read text
+ */
+char* read_text();
+
+/**
  * @brief Create a new map instance with default values
  * @param loc Default value for map_data.loc
  * @return Created and memory allocated map_data pointer

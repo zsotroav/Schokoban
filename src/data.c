@@ -1,6 +1,17 @@
 #include "data.h"
 #include "lib/debugmalloc.h"
 
+char* read_text() {
+    int n = 1;
+
+    char* text = calloc(2, sizeof(char));
+    while((text[n-1] = fgetc(stdin)) != '\n' && text[n-1] != EOF)
+        text = realloc(text, (++n+1) * sizeof(char));
+
+    text[n-1] = '\0';
+    return text;
+}
+
 map_data* map_init(char* loc) {
     map_data* map = malloc(sizeof(map_data));
 
@@ -50,7 +61,7 @@ fame* insert_fame_at(fame* first, int n, char* name, int move) {
     fame* next = NULL;
     if (n > 0) {
         curr = first;
-        for (int i = 0; i < n; ++i) {
+        for (int i = 0; i < n-1; ++i) {
             if (curr->move == 0) return NULL;
             curr = curr->next;
         }

@@ -17,9 +17,25 @@ map_data *game_init(char* level) {
     return map;
 }
 
-void game_end(map_data *map) {
-    // TODO: Update best score (WIP)
+void fame_add(int i, map_data* map) {
+    printf("Do you want to add yourself to the leaderboard? (Y/N)\n");
 
+    while (1) {
+        while (!econio_kbhit()) econio_sleep(0.2);
+        int ch = econio_getch();
+
+        if (ch == 'n') break;
+        if (ch != 'y') continue;
+
+        printf("Please enter your nickname:\nSchokoban > ");
+        map->fame_list = insert_fame_at(map->fame_list, i, read_text(), map->move_cnt);
+
+        if (!map_save_stats(map)) printf("Failed to save leaderboard!");
+        break;
+    }
+}
+
+void game_end(map_data *map) {
     if (!map->functional){
         printf("An internal exception occurred. Please try again later.");
         map_close(map);
@@ -31,27 +47,16 @@ void game_end(map_data *map) {
         return;
     }
 
-    printf("Map cleared!");
+    printf("Map cleared!\n");
     // Best is always the first
-    if (map->move_cnt < map->fame_list->move) {
-        printf("New record! Do you want to add yourself to the leaderboard? (Y/N)\n");
-
-        bool waiting = true;
-        while (waiting) {
-            while (!econio_kbhit()) econio_sleep(0.2);
-            switch (econio_getch()) {
-                case 'y':
-                    map->fame_list = insert_fame_at(map->fame_list, 0, "Da best", map->move_cnt);
-                    if (!map_save_stats(map)) printf("Failed to save leaderboard!");
-                    // TODO: Read name from stdin
-                case 'n': waiting = false; break;
-            }
+    fame* curr = map->fame_list;
+    for (int i = 0; curr != NULL; ++i) {
+        if (map->move_cnt < curr->move) {
+            fame_add(i, map);
+            break;
         }
-
-        // printf("%s", map->move_cnt == map->fame_list->move ? "Record met!" : "New record!");
+        curr = curr->next;
     }
-
-
     map_close(map);
 }
 
