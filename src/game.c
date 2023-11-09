@@ -11,7 +11,6 @@ map_data *game_init(char* level) {
     map_data *map = map_open(level);
     if (map == NULL) return NULL;
 
-    print_all(map);
     econio_rawmode();
 
     return map;

@@ -10,6 +10,7 @@
 #define set_xy_offset(map, x, y, value) set_xy(map, ((map)->player_x + (x)), ((map)->player_y + (y)), (value))
 #define indent(map) ((20 - map->width) / 2)
 #define go_to_last_move(move) while (move->next != NULL) move = move->next
+#define is_valid_move(c) strchr("lurdLURDx", c)
 
 typedef enum {
     MV_L = 'L',     //!< Left (box moved)

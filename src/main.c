@@ -7,6 +7,7 @@
 #include "menu_level_handle.h"
 #include "menu_main_handle.h"
 #include "io_level.h"
+#include "io_map.h"
 #include "lib/debugmalloc.h"
 #include "lib/econio.h"
 #include "printer.h"
@@ -20,6 +21,8 @@ bool game_master(game_type type, int* level) {
 
     // Don't need to check map_loc for null because that would be redundant - the other functions handle it
     map_data *map = game_init(map_loc);
+
+
     if (map == NULL) {
         printf("Game init failed! Press any key to return to the main menu...\n");
         free(map_loc);
@@ -29,11 +32,30 @@ bool game_master(game_type type, int* level) {
     }
     if (type != CUSTOM) map->level = *level;
 
+    FILE* sav = get_meta_file(map_loc, "r", false);
+    if (sav != NULL && type != ARCADE) {
+        printf("Found saved state for this map. Do you want to load it? (Y/N)\n");
+
+        while (!econio_kbhit()) econio_sleep(0.2);
+        if (econio_getch() == 'y') map_load_moves(map, sav);
+    }
+    fclose(sav);
+
+    print_all(map);
+
     // Main gameplay loop (get input and make sure we're still functional (no internal exceptions))
     while (game_wait_input(map) && map->functional);
 
     // Always print the leaderboard at the end
     print_leaderboard(map);
+
+    if (map->box != 0 && map->move_cnt > 0) {
+        printf("Do you want to save your progress? (Y/N)\n");
+
+        while (!econio_kbhit()) econio_sleep(0.2);
+        if (econio_getch() == 'y') printf( map_save_moves(map) ? "Progress saved!\n" : "Failed to save progress!\n");
+    }
+
     game_end(map);
     free(map_loc);
 

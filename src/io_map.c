@@ -4,15 +4,17 @@
 #include "io_map.h"
 #include "printer.h"
 #include "data.h"
+#include "game.h"
 #include "lib/debugmalloc.h"
+#include "lib/econio.h"
 
-FILE* get_stat_file(char* loc, char* mode) {
+FILE* get_meta_file(char* loc, char* mode, bool stats) {
     int len = strlen(loc) + 5;
     char *stats_loc = malloc(len);
     strcpy(stats_loc, loc);
     stats_loc[len-1] = '\0';
 
-    FILE* re = fopen(strcat(stats_loc, ".dat"), mode);
+    FILE* re = fopen(strcat(stats_loc, stats ? ".dat" : ".sav"), mode);
     free(stats_loc);
     return re;
 }
@@ -31,7 +33,7 @@ char* read_long(FILE* fptr) {
 }
 
 bool map_load_stats(map_data *map) {
-    FILE* statptr = get_stat_file(map->loc, "r");
+    FILE* statptr = get_meta_file(map->loc, "r", true);
     if (statptr == NULL) return  false;
 
     fame* curr = map->fame_list;
@@ -48,8 +50,34 @@ bool map_load_stats(map_data *map) {
     return true;
 }
 
+bool map_save_moves(map_data *map) {
+    FILE* savptr = get_meta_file(map->loc, "w", false);
+    if (savptr == NULL) return  false;
+
+    move* curr = map->moves;
+    while (curr != NULL) {
+        if (curr->type == MV_INV) continue;
+
+        fprintf(savptr, "%c", curr->type);
+        curr = curr->next;
+    }
+
+    fclose(savptr);
+    return true;
+}
+
+void map_load_moves(map_data *map, FILE* savptr) {
+    char c;
+    while (fscanf(savptr, "%c", &c) != EOF) {
+        if (!is_valid_move(c)) continue;
+
+        if (c == 'x') game_undo(map);
+        else game_mv(map, strchr("UDud", c), strchr("RDrd", c));
+    }
+}
+
 bool map_save_stats(map_data *map) {
-    FILE* statptr = get_stat_file(map->loc, "w");
+    FILE* statptr = get_meta_file(map->loc, "w", true);
     if (statptr == NULL) return  false;
 
     fame* curr = map->fame_list;
@@ -68,7 +96,6 @@ bool meta_exists(char* meta, FILE* fptr) {
     return (strcmp(params, meta) == 0);
 }
 
-// TODO: Max width
 map_data* map_open(char* loc) {
     // Open XSB for reading
     FILE* mapptr = fopen(loc, "r");

@@ -6,12 +6,13 @@
 #define map_is_valid_char(c) strchr("@+$*#._- ", c)
 
 /**
- * @brief Open stats file, which is just the xsb map file with .dat at the end
+ * @brief Open stats/save state file, which is just the xsb map file with .dat/.sav at the end
  * @param loc Location of the XSB file
  * @param mode File open mode
+ * @param stat true = stats file // false = save file
  * @return File pointer to the stats file
  */
-FILE* get_stat_file(char* loc, char* mode);
+FILE* get_meta_file(char* loc, char* mode, bool stat);
 
 /**
  * @brief Read undefined length line
@@ -26,6 +27,10 @@ char* read_long(FILE* fptr);
  * @return Success or Failure to load.
  */
 bool map_load_stats(map_data *map);
+
+bool map_save_moves(map_data *map);
+
+void map_load_moves(map_data *map, FILE* savptr);
 
 /**
  * @brief Save the stats of the map into the appropriate data file
