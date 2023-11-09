@@ -21,7 +21,7 @@ int io_level_parse(char* directory) {
 
 char* io_level_get(char* directory, int id) {
     int size = sizeof(char) * (
-            ceil((double) log10(id + 0.1))    // Length of the number
+            ceil((double) log10(id + 0.1))   // Length of the number
             + 4                              // .xsb
             + strlen(directory)              // /path/to/
             + 1);                            // '\0'

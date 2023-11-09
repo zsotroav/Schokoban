@@ -114,7 +114,11 @@ map_data* map_open(char* loc) {
     map_load(map, mapptr);
 
     // no T because that was already read above
-    map->title  = meta_exists("itle: ", mapptr)   ? read_long(mapptr) : loc;
+    if (meta_exists("itle: ", mapptr)) map->title = read_long(mapptr);
+    else {
+        map->title = malloc((strlen(loc) + 1) * sizeof(char));
+        strcpy(map->title, loc);
+    }
     map->author = meta_exists("Author: ", mapptr) ? read_long(mapptr) : calloc(1, sizeof(char));
 
     map_load_stats(map);
