@@ -47,7 +47,7 @@ void print_xy(map_data *map, int x, int y) {
             break;
         case '_':
         case '-':
-        case ' ': printf(" "); break;
+        case ' ': printf("·"); break;
         case '+': econio_textcolor(COL_RED);
         case '@': printf("☻"); break;
         case '.':
