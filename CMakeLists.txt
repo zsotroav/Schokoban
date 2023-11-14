@@ -49,6 +49,10 @@ add_executable(schokoban
         src/printer.c
 )
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Werror")
+file(GLOB_RECURSE SRC_DIR "src/*.c" "include/*.h")
 
-
+set_source_files_properties(
+        ${SRC_DIR}
+        PROPERTIES
+        COMPILE_FLAGS "-Wall -Werror"
+)
