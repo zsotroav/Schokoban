@@ -71,9 +71,11 @@ char* read_text();
 /**
  * @brief Create a new map instance with default values
  * @param loc Default value for map_data.loc
+ * @param width Width of the map for allocation
+ * @param height Height of the map for allocation
  * @return Created and memory allocated map_data pointer
  */
-map_data* map_init(char* loc);
+map_data* map_init(char* loc, int width, int height);
 
 /**
  * @brief Insert a new move at the end of the current chain

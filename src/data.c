@@ -12,15 +12,20 @@ char* read_text() {
     return text;
 }
 
-map_data* map_init(char* loc) {
+map_data* map_init(char* loc, int width, int height) {
     map_data* map = malloc(sizeof(map_data));
 
     map->loc = malloc(strlen(loc) + 1);
     strcpy(map->loc, loc);
 
+    // required space for the map data
+    int size = width * height * sizeof(char);
+    map->map = malloc(size);
+    memset(map->map, 0x00, size);
+
     map->functional = true;
-    map->width = 0;
-    map->height = 0;
+    map->width = width;
+    map->height = height;
     map->move_cnt = 0;
     map->box = 0;
 

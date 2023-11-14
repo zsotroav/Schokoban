@@ -101,25 +101,25 @@ map_data* map_open(char* loc) {
     FILE* mapptr = fopen(loc, "r");
     if (mapptr == NULL) return NULL;
 
+    int w = 0, h = 0;
+
+    fscanf(mapptr, "%d,%d\n", &w, &h);
+    if (w == 0 || h == 0) return NULL;
+
     // Create and initialize map data
-    map_data *map = map_init(loc);
-
-    fscanf(mapptr, "%d,%d\n", &map->width, &map->height);
-    if (map->width == 0 || map->height == 0) return NULL;
-
-    // malloc the required space for the map data
-    map->map = malloc((map->width * map->height * sizeof(char)));
-    memset(map->map, 0x00, map->width * map->height);
+    map_data *map = map_init(loc, w, h);
 
     map_load(map, mapptr);
 
-    // no T because that was already read above
+    // no T because that was already read in map_load
     if (meta_exists("itle: ", mapptr)) map->title = read_long(mapptr);
     else {
         map->title = malloc((strlen(loc) + 1) * sizeof(char));
         strcpy(map->title, loc);
     }
-    map->author = meta_exists("Author: ", mapptr) ? read_long(mapptr) : calloc(1, sizeof(char));
+    map->author = meta_exists("Author: ", mapptr) ?
+                  read_long(mapptr) :      // Read the author if it is known
+                  calloc(1, sizeof(char)); // Single null byte for simpler free
 
     map_load_stats(map);
 
