@@ -74,45 +74,131 @@ schokoban
    1. ASCII font for logo: tmplr by Eugene Ghanizadeh Khoub, 
    generated with [patorjk.com](https://patorjk.com/software/taag/#p=display&h=1&v=2&f=Tmplr&t=SCHOKOBAN)
 
-### Gameplay loop
+## Program structure
+
+### High-level
 ```mermaid
 flowchart TD
-    main[START] --> menu{main menu\nGame mode?} --> |ARCADE| game_master[Game_master]
-    menu --> |FREE| menu_level_open(menu_level_open) --> game_master
-    menu --> |CUSTOM| game_master --> |Begin init|initialize_game
+   main(START) --> menu{main menu\nGame mode?} 
+   menu --> |ARCADE| game_master
+   menu --> |FREE| menu_level_open[menu_level_open] --> game_master[Game_master]
+   menu --> |CUSTOM| game_master 
+   game_master -.-> |Init failed\nreturn| menu
+    
+   game_master --> |Prepare the game\nand enter main gameplay loop| game_loop
 
-    initialize_game --> |CUSTOM| menu_custom_open(menu_custom_open) 
-    --> game_init(game_init)
-    initialize_game --> |else| io_level_fullpath(io_level_fullpath) 
-    --> game_init --> map_open(map_open) --> map_load(map_load)
-    map_open --> map_load_stats(map_load_stats)
-    game_master -.-> |Init failed\nreturn;| menu
+   subgraph game_loop[Execution order]
+      init>Initialize the game] 
+      -.-> master_loaded>Start game] 
+      -.-> gameplay>Gameplay] 
+      -.-> finished{Finished?} -.-> |No\nloop back| gameplay
+      finished -.-> |Yes| cleanup>cleanup]
+      cleanup
+   end
 
-    game_master --> |Init successful| master_loaded[Start game]
-    --> save{Saved state\nfound?}
-    --> |Yes| save_found{Ask user:\nLoad?}
-    save_found --> |Yes| save_load(save load) -.-> |continue\nexecution| print_all(print_all)
-    save_found --> |No| print_all
-    save --> |No| print_all
+   
+``` 
 
-    game_master --> |Game started| wait_input(wait_input)
+### Game initialization
+```mermaid
+flowchart TD
+   init>Initialize the game]
+
+   init --> mode{Game mode?} --> |CUSTOM| menu_custom   
+   mode --> |else| io_level
+
+   subgraph menu_custom[menu_custom.c]
+      menu_custom_open[menu_custom_open]
+   end
 
 
+   subgraph io_level[io_level.c]
+      io_level_fullpath[io_level_fullpath] 
+   end
 
-    game_master --> |Game finished| cleanup 
-    -.-> |continue\nexecution| print_leaderboard(print_leaderboard)
-    -.-> |continue\nexecution| game_won{Did player win?\nboxes not on\ngoals = 0}
-    game_won --> |No| ask_save{Ask: Save progress?}
-    --> |Yes| save_state(map_save_moves)
-    ask_save -.-> |No\n\ncontinue\nexecution| game_end(game_end)
-    game_won -.-> |Yes\n\ncontinue\nexecution| game_end
-    --> game_end_mode{What was\nthe game mode?}
-    --> |ARCADE| ask_arcade_continue{Ask: Next level\nor main menu}
-    -.-> |Next level\n\nStay in gameplay loop| game_master
-    ask_arcade_continue -.-> |Main menu\n\nExit gameplay loop| menu
+   subgraph game[game.c]
+      game_init[game_init]
+   end
 
+   subgraph io_map[io_map.c]
+      map_open[map_open]
+      map_load[map_load]
+      map_load_stats[map_load_stats]
+   end
+
+   menu_custom_open  --> game
+   io_level_fullpath --> game
+
+   game_init --> success{Success?} --> |Yes| io_map
+   success --> |No| main_menu>main menu]
+   map_open --> map_load
+   map_open --> map_load_stats
+
+   io_map --> |Loaded| start>Start game]
 ```
 
+### Start game
+```mermaid
+flowchart TD
+   start>Start game]
+   --> save{Saved state\nfound?}
+   --> |Yes| save_found{Ask user:\nLoad?}
+   save_found --> |Yes| io_map
+   -.->|continue\nexecution| printer
+   save_found --> |No| printer
+   save --> |No| printer
+
+   subgraph printer[printer.c]
+      pall[print_all]
+      pall --> print_meta 
+      pall --> print_map_all
+      pall --> height{"Height < 12?"} --> |Yes| print_controls
+   end
+
+   subgraph io_map[io_map.c]
+      save_load[save load] 
+   end
+```
+
+### Gameplay
+
+### Cleanup
+```mermaid
+
+flowchart TD
+   cleanup>Cleanup]
+   -.-> printer
+   -.-> game_won{Game lost?\nAsk: Save progress?}
+   --> |Yes| map_save_moves -.-> game_e
+   game_won -.-> |Game won| game_e
+
+   subgraph printer[printer.c]
+      print_leaderboar
+   end 
+
+   subgraph io_map[io_map.c]
+      map_save_moves
+      map_save_stats
+   end 
+
+   subgraph data[data.c]
+        insert_fame_at
+   end
+
+   subgraph game[game.c]
+      game_e -.-> fame_add{Qualify for fame list?\nAsk: Add to fame list?} 
+      --> |Yes| insert_fame_at -.-> map_save_stats
+
+   end 
+    fame_add -.-> |No| ask_continue
+   
+   subgraph main[main.c]
+   ask_continue{Ask: Next level/Retry\nor main menu?}
+   -.-> |Next level/Retry\nStay in gameplay loop| game_master>game_master]
+   ask_continue -.-> |Main menu\nExit gameplay loop| menu>main_menu]
+    
+end
+```
 ---
 
 
