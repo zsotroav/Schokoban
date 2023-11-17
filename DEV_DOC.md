@@ -49,8 +49,7 @@ schokoban
 |   │   ├── ECONIO_LICENSE    // MIT License file for the econio library
 |   │   ├── econio.c
 |   │   └── econio.h
-|   ├── config.h
-│   │
+|   ├── config.h        // Global configuration constants (instead of .ENV)
 |   └── ...
 ├── .gitignore
 ├── CMakeLists.txt
@@ -88,6 +87,7 @@ flowchart TD
    game_master --> |Prepare the game\nand enter main gameplay loop| game_loop
 
    subgraph game_loop[Execution order]
+      direction LR
       init>Initialize the game] 
       -.-> master_loaded>Start game] 
       -.-> gameplay>Gameplay] 
@@ -129,38 +129,33 @@ flowchart TD
    menu_custom_open  --> game
    io_level_fullpath --> game
 
-   game_init --> success{Success?} --> |Yes| io_map
-   success --> |No| main_menu>main menu]
+   game_init --> |Success| io_map
+   game_init --> |Init failed| main_menu>main menu]
    map_open --> map_load
    map_open --> map_load_stats
-
-   io_map --> |Loaded| start>Start game]
 ```
 
 ### Start game
 ```mermaid
 flowchart TD
    start>Start game]
-   --> save{Saved state\nfound?}
-   --> |Yes| save_found{Ask user:\nLoad?}
-   save_found --> |Yes| io_map
-   -.->|continue\nexecution| printer
-   save_found --> |No| printer
+   --> save{Found save?\nAsk: Load?}
+   --> |Yes| io_map
+   -.-> printer
    save --> |No| printer
 
    subgraph printer[printer.c]
+      direction LR
       pall[print_all]
       pall --> print_meta 
       pall --> print_map_all
-      pall --> height{"Height < 12?"} --> |Yes| print_controls
+      pall --> height{"Height\n<12?"} --> |Yes| print_controls
    end
 
    subgraph io_map[io_map.c]
       save_load[save load] 
    end
 ```
-
-### Gameplay
 
 ### Cleanup
 ```mermaid
@@ -169,7 +164,7 @@ flowchart TD
    cleanup>Cleanup]
    -.-> printer
    -.-> game_won{Game lost?\nAsk: Save progress?}
-   --> |Yes| map_save_moves -.-> game_e
+   --> |Yes| map_save_moves -.-> game_e["game_end"]
    game_won -.-> |Game won| game_e
 
    subgraph printer[printer.c]
