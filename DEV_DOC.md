@@ -32,21 +32,26 @@ The project follows a simple folder structure with C source code in the
 ```
 schokoban
 ├── src
-|   ├── data.c          // Basic data handling
-|   ├── econio.c        // Library code
-|   ├── game.c          // Most of the game logic's code
-|   ├── io_map.c        // Handling map reading
-│   ├── main.c          // Main entry code
-|   └── printer.c       // UI Handling
+|   ├── data.c                // Basic data handling
+|   ├── game.c                // Main gameplay logic
+|   ├── io_level.c            // Level (XSB) file path and location handling
+|   ├── io_map.c              // Level (XSB) file reading
+│   ├── main.c                // Main entry code and gameplay loop
+|   ├── menu_custom.c         // Custom map select menu handling
+|   ├── menu_level_handle.c   // Level select menu handling
+|   ├── menu_level_printer.c  // Level select menu printer functions
+|   ├── menu_main_handle.c    // Main menu movement handling
+|   ├── menu_main_printer.c   // Main menu printer functions
+|   └── printer.c             // Game UI Handling
 ├── include
-|   ├── lib             // Libraries
+|   ├── lib                   // Libraries
 |   |   ├── debugmalloc.h
-|   │   ├── ECONIO_LICENSE  // MIT License file for the econio library
+|   │   ├── ECONIO_LICENSE    // MIT License file for the econio library
+|   │   ├── econio.c
 |   │   └── econio.h
-|   ├── data.h
-│   ├── game.h
-|   ├── io_map.h
-|   └── printer.h
+|   ├── config.h
+│   │
+|   └── ...
 ├── .gitignore
 ├── CMakeLists.txt
 ├── DEV_DOC.md
@@ -69,7 +74,49 @@ schokoban
    1. ASCII font for logo: tmplr by Eugene Ghanizadeh Khoub, 
    generated with [patorjk.com](https://patorjk.com/software/taag/#p=display&h=1&v=2&f=Tmplr&t=SCHOKOBAN)
 
+### Gameplay loop
+```mermaid
+flowchart TD
+    main[START] --> menu{main menu\nGame mode?} --> |ARCADE| game_master[Game_master]
+    menu --> |FREE| menu_level_open(menu_level_open) --> game_master
+    menu --> |CUSTOM| game_master --> |Begin init|initialize_game
+
+    initialize_game --> |CUSTOM| menu_custom_open(menu_custom_open) 
+    --> game_init(game_init)
+    initialize_game --> |else| io_level_fullpath(io_level_fullpath) 
+    --> game_init --> map_open(map_open) --> map_load(map_load)
+    map_open --> map_load_stats(map_load_stats)
+    game_master -.-> |Init failed\nreturn;| menu
+
+    game_master --> |Init successful| master_loaded[Start game]
+    --> save{Saved state\nfound?}
+    --> |Yes| save_found{Ask user:\nLoad?}
+    save_found --> |Yes| save_load(save load) -.-> |continue\nexecution| print_all(print_all)
+    save_found --> |No| print_all
+    save --> |No| print_all
+
+    game_master --> |Game started| wait_input(wait_input)
+
+
+
+    game_master --> |Game finished| cleanup 
+    -.-> |continue\nexecution| print_leaderboard(print_leaderboard)
+    -.-> |continue\nexecution| game_won{Did player win?\nboxes not on\ngoals = 0}
+    game_won --> |No| ask_save{Ask: Save progress?}
+    --> |Yes| save_state(map_save_moves)
+    ask_save -.-> |No\n\ncontinue\nexecution| game_end(game_end)
+    game_won -.-> |Yes\n\ncontinue\nexecution| game_end
+    --> game_end_mode{What was\nthe game mode?}
+    --> |ARCADE| ask_arcade_continue{Ask: Next level\nor main menu}
+    -.-> |Next level\n\nStay in gameplay loop| game_master
+    ask_arcade_continue -.-> |Main menu\n\nExit gameplay loop| menu
+
+```
+
 ---
+
+
+## SCHOKOBAN
 ```
 ┏┓┏┓┓┏┏┓┓┏┓┏┓┳┓┏┓┳┓    ┳┓┏┓┓┏ ┳┓┏┓┏┓┏┓
 ┗┓┃ ┣┫┃┃┃┫ ┃┃┣┫┣┫┃┃ ━━ ┃┃┣ ┃┃ ┃┃┃┃┃ ┗┓
