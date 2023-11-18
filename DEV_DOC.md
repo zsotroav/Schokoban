@@ -89,11 +89,13 @@ See Figures 4.2-4.6 for a more detailed overview of the main gameplay loop.
 
 ```mermaid
 flowchart TD
-   main(START) --> menu{main menu\nGame mode?} 
+   main([GAME OPENED]) --> menu{main menu\nGame mode?} 
    menu --> |ARCADE| game_master
    menu --> |FREE| menu_level_open --> game_master
    menu --> |CUSTOM| menu_custom_open --> game_master 
    game_master -.-> |Init failed\nreturn| menu
+
+   menu --> |exit| exit([EXIT GAME])
     
    game_master --> |Prepare the game\nand enter main gameplay loop| game_loop
 
@@ -241,7 +243,7 @@ flowchart TD
    subgraph game["game.c - fame_add()"]
       full{List not full?\nor\nIn TOP10?}
       --> |Yes| ask{Ask: Add to list?}
-      ask --> |No| re(return;)
+      ask --> |No| re(["return;"])
       full --> |No| re
    end
 
