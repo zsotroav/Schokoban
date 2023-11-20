@@ -26,7 +26,6 @@ void menu_print_level_item(int num, int color, int id);
  */
 void menu_print_level_page(int page, int max);
 
-
 /**
  * @brief Print the full level selection screen
  * @param page Page to start printing at

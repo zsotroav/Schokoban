@@ -28,8 +28,18 @@ char* read_long(FILE* fptr);
  */
 bool map_load_stats(map_data *map);
 
+/**
+ * @brief Save the moves of the map to the appropriate data file
+ * @param map Pointer to map data
+ * @return Success or Failure to save.
+ */
 bool map_save_moves(map_data *map);
 
+/**
+ * @brief Load the moves of the map from the data file
+ * @param map Pointer to map data
+ * @param savptr FILE* to save file
+ */
 void map_load_moves(map_data *map, FILE* savptr);
 
 /**
