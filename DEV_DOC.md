@@ -130,8 +130,7 @@ pointer to operate.
 | char*     | title      | Map's title metadata.                           |
 | char*     | author     | Map's author metadata.                          |
 | bool      | functional | Indicate if an internal error was encountered.  |
-| int       | move_cnt   | Number of moves made 
-(to not have to traverse the linked list each time it's needed)            |
+| int       | move_cnt   | Number of moves made (to not have to traverse the linked list each time it's needed)            |
 | move*     | moves      | List of made moves.                             |
 | int       | player_x   | Player character's current X location.          |
 | int       | player_y   | Player character's current Y location.          |
@@ -362,52 +361,52 @@ The following section was generated with
 
 #### `char* read_text()`
 
-Read long string from stdin
+**Brief:** Read long string from stdin
 
 **Returns:** `read` — text
 
 #### `map_data* map_init(char* loc, int width, int height)`
 
-Create a new map instance with default values
+**Brief:** Create a new map instance with default values
 
 **Parameters:**
 
-* `Default` — `loc` — value for map_data.loc
-* `Width` — `width` — of the map for allocation
-* `Height` — `height` — of the map for allocation
+* `loc` — Default value for map_data.loc
+* `width` — Width of the map for allocation
+* `height` — Height of the map for allocation
 
 **Returns:** `Created` — and memory allocated map_data pointer
 
 #### `move* get_next_move(move* prev)`
 
-Insert a new move at the end of the current chain
+**Brief:** Insert a new move at the end of the current chain
 
 **Parameters:**
 
-* `Any` — `prev` — point of the current move chain
+* `prev` — Any point of the current move chain
 
 **Returns:** `The` — new element
 
 #### `fame* add_new_fame(fame* prev)`
 
-Insert new fame list item after a given one
+**Brief:** Insert new fame list item after a given one
 
 **Parameters:**
 
-* `Element` — `prev` — to insert after
+* `prev` — Element to insert after
 
 **Returns:** `The` — new element
 
 #### `fame* insert_fame_at(fame* first, int n, char* name, int move)`
 
-Insert new fame list item after the n.th one\n
+**Brief:** Insert new fame list item after the n.th one
 
 **Parameters:**
 
-* `List` — `first` — item to count from
-* `to` — `Index` — insert at
-* `List` — `name` — item name value
-* `List` — `move` — item move value
+* `first` — List item to count from
+* `Index` — to insert at
+* `name` — List item name value
+* `move` — List item move value
 
 **Returns:** `First` — item
 
@@ -418,34 +417,46 @@ Insert new fame list item after the n.th one\n
 
 #### `map_data* game_init(char* level)`
 
+**Brief:** Initialize and begin game on the given level
+
 **Parameters:**
 
-* `Path` — `level` — to the XSB file for the map
+* `level` — Path to the XSB file for the map
 
 **Returns:** `generated` — map data
 
 #### `void game_end(map_data *map)`
 
+**Brief:** Ends the game and calls map_close to free all allocated memory
+
 **Parameters:**
 
-* `Pointer` — `map` — to map data
+* `map` — Pointer to map data
 
 #### `void game_undo(map_data *map)`
 
+**Brief:** Undo the last non-undo move made
+
+**Note:** Undo counts as a regular move and increases the move counter
+
 **Parameters:**
 
-* `Pointer` — `map` — to map data
+* `map` — Pointer to map data
 
 #### `bool game_wait_input(map_data *map)`
+
+**Brief:** Wait for and handle input
 
 **Returns:** `false` — if game is completed or aborted, true otherwise
 
 #### `void game_mv(map_data *map, bool ud, bool rd)`
 
+**Brief:** Attempt to move the player
+
 **Parameters:**
 
-* `Indicate` — `ud` — if movement is on the Y axis (Up-Down)
-* `true:` — `rd` — Right or Left movement
+* `ud` — Indicate if movement is on the Y axis (Up-Down)
+* `rd` — true: Right or Left movement
 
 <!-- END DOC-COMMENT -->
 
@@ -454,7 +465,7 @@ Insert new fame list item after the n.th one\n
 
 #### `io_level_fullpath(id)`
 
-Get the number of xsb files in the directory 
+**Brief:** Get the number of xsb files in the directory 
 
 **Note:** This function does not validate if the XSB files are valid 
 
@@ -466,22 +477,22 @@ Get the number of xsb files in the directory
 
 #### `int io_level_parse(char* directory)`
 
-Get the full path based on config directory
+**Brief:** Get the full path based on config directory
 
 **Parameters:**
 
-* `ID` — `id` — of the map file
+* `id` — ID of the map file
 
 **Returns:** `full` — (relative) path to the XSB
 
 #### `char* io_level_get(char* directory, int id)`
 
-Get the file name of the map with a specific id
+**Brief:** Get the file name of the map with a specific id
 
 **Parameters:**
 
-* `Directory` — `directory` — to search in
-* `Number` — `id` — of the map file
+* `directory` — Directory to search in
+* `id` — Number of the map file
 
 **Returns:** `File` — name
 
@@ -492,112 +503,112 @@ Get the file name of the map with a specific id
 
 #### `FILE* get_meta_file(char* loc, char* mode, bool stat)`
 
-Open stats/save state file, which is just the xsb map file with .dat/.sav at the end
+**Brief:** Open stats/save state file, which is just the xsb map file with .dat/.sav at the end
 
 **Parameters:**
 
-* `Location` — `loc` — of the XSB file
-* `File` — `mode` — open mode
-* `true` — `stat` — = stats file // false = save file
+* `loc` — Location of the XSB file
+* `mode` — File open mode
+* `stat` — true = stats file // false = save file
 
 **Returns:** `File` — pointer to the stats file
 
 #### `char* read_long(FILE* fptr)`
 
-Read undefined length line
+**Brief:** Read undefined length line
 
 **Parameters:**
 
-* `File` — `fptr` — pointer to read from
+* `fptr` — File pointer to read from
 
 **Returns:** `Malloced` — string
 
 #### `bool map_load_stats(map_data *map)`
 
-Load the stats (leaderboard) of the map from the appropriate data file
+**Brief:** Load the stats (leaderboard) of the map from the appropriate data file
 
 **Parameters:**
 
-* `Pointer` — `map` — to map data
+* `map` — Pointer to map data
 
 **Returns:** `Success` — or Failure to load.
 
 #### `bool map_save_moves(map_data *map)`
 
-Save the moves of the map to the appropriate data file
+**Brief:** Save the moves of the map to the appropriate data file
 
 **Parameters:**
 
-* `Pointer` — `map` — to map data
+* `map` — Pointer to map data
 
 **Returns:** `Success` — or Failure to save.
 
 #### `void map_load_moves(map_data *map, FILE* savptr)`
 
-Load the moves of the map from the data file
+**Brief:** Load the moves of the map from the data file
 
 **Parameters:**
 
-* `Pointer` — `map` — to map data
-* `FILE*` — `savptr` — to save file
+* `map` — Pointer to map data
+* `savptr` — FILE* to save file
 
 #### `bool map_save_stats(map_data *map)`
 
-Save the stats of the map into the appropriate data file
+**Brief:** Save the stats of the map into the appropriate data file
 
 **Parameters:**
 
-* `Pointer` — `map` — to map data
+* `map` — Pointer to map data
 
 **Returns:** `Success` — or Failure to save.
 
 #### `bool meta_exists(char* meta, FILE* fptr)`
 
-Check if given metadata value is in the file at the expected location
+**Brief:** Check if given metadata value is in the file at the expected location
 
 **Parameters:**
 
-* `Metadata` — `meta` — name
-* `XSB` — `fptr` — file pointer
+* `meta` — Metadata name
+* `fptr` — XSB file pointer
 
 **Returns:** `true/false` — based on result
 
 #### `map_data* map_open(char *loc)`
 
-Opens the given map file
+**Brief:** Opens the given map file
 
 **Parameters:**
 
-* `relative` — `loc` — or absolute path to the xsb map file
+* `loc` — relative or absolute path to the xsb map file
 
 **Returns:** `generated` — map data
 
 #### `void map_load(map_data *map, FILE* mapptr)`
 
-Loads the contents of the map. Must always be called after map_open()
+**Brief:** Loads the contents of the map. Must always be called after map_open()
 
 **Parameters:**
 
-* `Pointer` — `map` — to map data
-* `file` — `mapptr` — pointer to map file
+* `map` — Pointer to map data
+* `mapptr` — file pointer to map file
 
 **Returns:** `Success` — or Failure to load map data.
 
 #### `void map_reset(map_data *map)`
 
-Lazily (only doing what's necessary) resets the map from the map file
+**Brief:** Lazily (only doing what's necessary) resets the map from the map file
 
 **Parameters:**
 
-* `Pointer` — `map` — to map data
+* `map` — Pointer to map data
 
 #### `void map_close(map_data *map)`
 
-Closes the map file and frees all allocated memory for the map
+**Brief:** Closes the map file and frees all allocated memory for the map
 
 **Parameters:**
 
-* `Pointer` — `map` — to map data
+* `map` — Pointer to map data
 
 <!-- END DOC-COMMENT -->
 
@@ -606,7 +617,7 @@ Closes the map file and frees all allocated memory for the map
 
 #### `char* menu_custom_open()`
 
-Open the custom map input menu
+**Brief:** Open the custom map input menu
 
 **Returns:** `The` — user provided (!) path
 
@@ -617,30 +628,30 @@ Open the custom map input menu
 
 #### `void menu_level_highlight(int id, int page, int max, bool active)`
 
-Highlight level menu item
+**Brief:** Highlight level menu item
 
 **Parameters:**
 
-* `ID` — `id` — of the menu item (location on page)
-* `Current` — `page` — page in view (for number calculation)
-* `Maximum` — `max` — number of available levels (any more is greyed out)
-* `State` — `active` — to highlight
+* `id` — ID of the menu item (location on page)
+* `page` — Current page in view (for number calculation)
+* `max` — Maximum number of available levels (any more is greyed out)
+* `active` — State to highlight
 
 #### `bool menu_level_move(int* loc, int* page, int max)`
 
-Move level selection
+**Brief:** Move level selection
 
 **Parameters:**
 
-* `Current` — `loc` — location
-* `Current` — `page` — page
-* `Maximum` — `max` — number of available levels
+* `loc` — Current location
+* `page` — Current page
+* `max` — Maximum number of available levels
 
 **Returns:** `Selection` — complete: false (to break out of loop)
 
 #### `int menu_level_open()`
 
-Open level select menu and wait for completed selection
+**Brief:** Open level select menu and wait for completed selection
 
 **Returns:** `Selected` — level's number
 
@@ -651,40 +662,40 @@ Open level select menu and wait for completed selection
 
 #### `void menu_print_level_nav(bool direction, int color)`
 
-Print navigation block in level select menu
+**Brief:** Print navigation block in level select menu
 
 **Parameters:**
 
-* `ture:` — `direction` — Right // false: Left
-* `(econio)` — `color` — color to print with
+* `direction` — ture: Right // false: Left
+* `color` — (econio) color to print with
 
 #### `void menu_print_level_item(int num, int color, int id)`
 
-Print a single item on the level screen
+**Brief:** Print a single item on the level screen
 
 **Parameters:**
 
-* `Number` — `num` — to show
-* `(econio)` — `color` — color to print with
-* `Sequential` — `id` — ID of the button
+* `num` — Number to show
+* `color` — (econio) color to print with
+* `id` — Sequential ID of the button
 
 #### `void menu_print_level_page(int page, int max)`
 
-Print the full page of levels (loop through menu_print_level_item)
+**Brief:** Print the full page of levels (loop through menu_print_level_item)
 
 **Parameters:**
 
-* `Page` — `page` — no. to  print
-* `Maximum` — `max` — number of levels, any more is greyed out 00
+* `page` — Page no. to  print
+* `max` — Maximum number of levels, any more is greyed out 00
 
 #### `bool menu_print_level(int page, int max)`
 
-Print the full level selection screen
+**Brief:** Print the full level selection screen
 
 **Parameters:**
 
-* `Page` — `page` — to start printing at
-* `Maximum` — `max` — number of levels, any more is greyed out 00
+* `page` — Page to start printing at
+* `max` — Maximum number of levels, any more is greyed out 00
 
 **Returns:** Success/Failure
 
@@ -695,17 +706,17 @@ Print the full level selection screen
 
 #### `bool menu_main_move(game_type* type_loc)`
 
-Main menu movement looper
+**Brief:** Main menu movement looper
 
 **Parameters:**
 
-* `Current` — `type_loc` — selection
+* `type_loc` — Current selection
 
 **Returns:** `Selection` — complete: false (to break out of loop)
 
 #### `game_type menu_main_open()`
 
-Open main menu and wait for game type selection
+**Brief:** Open main menu and wait for game type selection
 
 **Returns:** `Selected` — game type or exit request
 
@@ -716,16 +727,16 @@ Open main menu and wait for game type selection
 
 #### `void menu_main_print_highlighted(int id, bool highlighted)`
 
-Print a single item on the main menu
+**Brief:** Print a single item on the main menu
 
 **Parameters:**
 
-* `ID` — `id` — of the menu item (location)
-* `Highlight` — `highlighted` — selection active/inactive
+* `id` — ID of the menu item (location)
+* `highlighted` — Highlight selection active/inactive
 
 #### `void menu_main_print()`
 
-Print the full main menu
+**Brief:** Print the full main menu
 
 <!-- END DOC-COMMENT -->
 
@@ -734,77 +745,79 @@ Print the full main menu
 
 #### `void printnat(int x, int y, int n, char* c)`
 
-Print a given number of characters at a location
+**Brief:** Print a given number of characters at a location
 
 **Parameters:**
 
-* `X` — `x` — (Horizontal) location
-* `Y` — `y` — (Vertical) location
-* `Number` — `n` — of times to print character
-* `Character` — `c` — to print
+* `x` — X (Horizontal) location
+* `y` — Y (Vertical) location
+* `n` — Number of times to print character
+* `c` — Character to print
 
 #### `void printat(int x, int y, char* c)`
 
-Print a character at location
+**Brief:** Print a character at location
 
 **Parameters:**
 
-* `X` — `x` — (Horizontal) location)
-* `Y` — `y` — (Vertical) location
-* `Character` — `c` — to print
+* `x` — X (Horizontal) location)
+* `y` — Y (Vertical) location
+* `c` — Character to print
 
 #### `void print_all(map_data *map)`
 
-Prints the full game to the screen
+**Brief:** Prints the full game to the screen
 
 #### `void print_map_all(map_data *map)`
 
-Prints every map component to the screen
+**Brief:** Prints every map component to the screen
 
 #### `void print_xy(map_data *map, int x, int y)`
 
-Prints the current value to the screen at the given location of the map, does not offset the print, prints wherever we're currently at
+does not offset the print, prints wherever we're currently at
+**Brief:** Prints the current value to the screen at the given location of the map,
 
 **Parameters:**
 
-* `Map` — `x` — location x
-* `Map` — `y` — location y
+* `x` — Map location x
+* `y` — Map location y
 
 #### `void print_xy_offset(map_data *map, int x, int y)`
 
-Prints the current value to the screen at the given location of the map, with the appropriate amount of offset
+with the appropriate amount of offset
+**Brief:** Prints the current value to the screen at the given location of the map,
 
 **Parameters:**
 
-* `Map` — `x` — location of x
-* `Map` — `y` — location of y
+* `x` — Map location of x
+* `y` — Map location of y
 
 #### `void print_meta(map_data* map)`
 
-Print the logo and available map metadata (title, author, record)
+**Brief:** Print the logo and available map metadata (title, author, record)
 
 **Parameters:**
 
-* `Pointer` — `map` — to map data
+* `map` — Pointer to map data
 
 #### `void print_update_move(int new)`
 
-Update the number of moves displayed
+**Brief:** Update the number of moves displayed
 
 **Parameters:**
 
-* `New` — `new` — number to show
+* `new` — New number to show
 
 #### `void print_controls()`
 
-Prints the control hints to the screen at current cursor position
+**Brief:** Prints the control hints to the screen at current cursor position
 
 #### `void print_leaderboard(map_data* map)`
 
-Print the leaderboard of the map
+**Brief:** Print the leaderboard of the map
 
 **Parameters:**
 
-* `Pointer` — `map` — to map data
+* `map` — Pointer to map data
 
 <!-- END DOC-COMMENT -->
