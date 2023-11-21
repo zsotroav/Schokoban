@@ -1,5 +1,43 @@
 # SCHOKOBAN - DEVELOPER'S DOCUMENTATION
 
+## Table of contents{ignore=true}
+<!-- @import "[TOC]" {cmd="toc" depthFrom=2 depthTo=3 orderedList=false} -->
+
+<!-- code_chunk_output -->
+
+- [1 Legal & License](#1-legal--license)
+- [2 Intro](#2-intro)
+- [3 High-level overview](#3-high-level-overview)
+  - [3.1 Files](#31-files)
+  - [3.2 Used external resources](#32-used-external-resources)
+  - [4 Data structure](#4-data-structure)
+  - [4.1 map data](#41-map-data)
+  - [4.2 move type](#42-move-type)
+  - [4.3 move](#43-move)
+  - [4.4 fame](#44-fame)
+- [5 Code and logic structure](#5-code-and-logic-structure)
+  - [5.1 Entry and gameplay loop](#51-entry-and-gameplay-loop)
+  - [5.2 Game initialization](#52-game-initialization)
+  - [5.3 Start game](#53-start-game)
+  - [5.4 Gameplay](#54-gameplay)
+  - [5.5 Cleanup](#55-cleanup)
+  - [5.6 Process fame list entry](#56-process-fame-list-entry)
+- [6 Functions](#6-functions)
+  - [6.1 data.h](#61-datah)
+  - [6.2 game.h](#62-gameh)
+  - [6.3 io_level.h](#63-io_levelh)
+  - [6.4 io_map.h](#64-io_maph)
+  - [6.5 menu_custom.h](#65-menu_customh)
+  - [6.6 menu_level_handle.h](#66-menu_level_handleh)
+  - [6.7 menu_level_printer.h](#67-menu_level_printerh)
+  - [6.8 menu_main_handle.h](#68-menu_main_handleh)
+  - [6.9 menu_main_printer.h](#69-menu_main_printerh)
+  - [6.10 printer.h](#610-printerh)
+
+<!-- /code_chunk_output -->
+
+<div class="page"></div>
+
 ## 1 Legal & License
 Copyright (c) 2023 Zsombor Török
 
@@ -74,9 +112,9 @@ schokoban
    1. ASCII font for logo: tmplr by Eugene Ghanizadeh Khoub, 
    generated with [patorjk.com](https://patorjk.com/software/taag/#p=display&h=1&v=2&f=Tmplr&t=SCHOKOBAN)
 
-### 3.3 Data structure
+### 4 Data structure
 
-#### 3.3.1 map data
+### 4.1 map data
 Defined in `data.h`, `struct map_data` contains all stored information about
 the currently loaded level/map. Most function calls require a `map_data`
 pointer to operate. 
@@ -99,7 +137,7 @@ pointer to operate.
 | int       | player_y   | Player character's current Y location.          |
 | int       | box        | Number of boxes not on goals yet.               |
 
-#### 3.3.2 move type
+### 4.2 move type
 Defined in `data.h`, `enum move_type` is an enum for the types of moves possible
 in the LURD format. Each possible state has an assigned char value as well.
 
@@ -116,7 +154,7 @@ in the LURD format. Each possible state has an assigned char value as well.
 | MV_UNDO | x | Undo                    |
 | MV_INV  |   | Invalid move (reserved) |
 
-#### 3.3.3 move
+### 4.3 move
 Defined in `data.h`, `struct move` is a double linked list for storing the list
 of moves made by the player on the current level
 
@@ -128,7 +166,7 @@ of moves made by the player on the current level
 
 <div class="page"></div>
 
-#### 3.3.4 fame
+### 4.4 fame
 Defined in `data.h`, `struct fame` is a linked list for storing the fame list
 
 | type  | field | description               |
@@ -139,7 +177,7 @@ Defined in `data.h`, `struct fame` is a linked list for storing the fame list
 
 <div class="page"></div>
 
-## 4 Code and logic structure
+## 5 Code and logic structure
 The following figures show a high-level (simplified) overview of the game's
 underlying logic and structure, showing only the important connections and
 relations. 
@@ -149,7 +187,7 @@ order; highlighted boxes are drawn around functions from the same file or for
 visual separation.
 
 
-### 4.1 Entry and gameplay loop
+### 5.1 Entry and gameplay loop
 See Figures 4.2-4.6 for a more detailed overview of the main gameplay loop. 
 
 ```mermaid
@@ -175,7 +213,7 @@ flowchart TD
    end
 ``` 
 
-### 4.2 Game initialization
+### 5.2 Game initialization
 ```mermaid
 flowchart TD
    init>Initialize the game]
@@ -211,7 +249,7 @@ flowchart TD
    map_open --> map_load_stats
 ```
 
-### 4.3 Start game
+### 5.3 Start game
 ```mermaid
 flowchart TD
    start>Start game]
@@ -233,7 +271,7 @@ flowchart TD
    end
 ```
 
-### 4.4 Gameplay
+### 5.4 Gameplay
 One of `main.c`'s primary functions is to handle the gameplay loop: 
 `game.c :: game_wait_input()` is called continuously in a loop until the game
 ends or the user exits the level. This function handles waiting for inputs and
@@ -264,7 +302,7 @@ flowchart TD
    goal --> |Yes| exit([Exit loop])
 ```
 
-### 4.5 Cleanup
+### 5.5 Cleanup
 ```mermaid
 flowchart TD
    cleanup>Cleanup]
@@ -292,7 +330,7 @@ flowchart TD
    end
 ```
 
-### 4.6 Process fame list entry
+### 5.6 Process fame list entry
 ```mermaid
 flowchart TD
    fame>Process fame] --> full
@@ -315,16 +353,17 @@ flowchart TD
    ask --> |Yes| data -.-> io_map
 ```
 
-## 5 Functions
+## 6 Functions
 The following section was generated with 
 [docblox2md](https://github.com/vphantom/docblox2md) from the header files.
 
-### 5.1 data.h
+### 6.1 data.h
 <!-- BEGIN DOC-COMMENT H4 include/data.h -->
 
 #### `char* read_text()`
 
 Read long string from stdin
+
 **Returns:** `read` — text
 
 #### `map_data* map_init(char* loc, int width, int height)`
@@ -374,7 +413,43 @@ Insert new fame list item after the n.th one\n
 
 <!-- END DOC-COMMENT -->
 
-### 5.3 io_level.h
+### 6.2 game.h
+<!-- BEGIN DOC-COMMENT H4 include/game.h -->
+
+#### `map_data* game_init(char* level)`
+
+**Parameters:**
+
+* `Path` — `level` — to the XSB file for the map
+
+**Returns:** `generated` — map data
+
+#### `void game_end(map_data *map)`
+
+**Parameters:**
+
+* `Pointer` — `map` — to map data
+
+#### `void game_undo(map_data *map)`
+
+**Parameters:**
+
+* `Pointer` — `map` — to map data
+
+#### `bool game_wait_input(map_data *map)`
+
+**Returns:** `false` — if game is completed or aborted, true otherwise
+
+#### `void game_mv(map_data *map, bool ud, bool rd)`
+
+**Parameters:**
+
+* `Indicate` — `ud` — if movement is on the Y axis (Up-Down)
+* `true:` — `rd` — Right or Left movement
+
+<!-- END DOC-COMMENT -->
+
+### 6.3 io_level.h
 <!-- BEGIN DOC-COMMENT H4 include/io_level.h -->
 
 #### `io_level_fullpath(id)`
@@ -412,7 +487,7 @@ Get the file name of the map with a specific id
 
 <!-- END DOC-COMMENT -->
 
-### 5.4 io_map.h
+### 6.4 io_map.h
 <!-- BEGIN DOC-COMMENT H4 include/io_map.h -->
 
 #### `FILE* get_meta_file(char* loc, char* mode, bool stat)`
@@ -526,17 +601,18 @@ Closes the map file and frees all allocated memory for the map
 
 <!-- END DOC-COMMENT -->
 
-### 5.5 menu_custom.h
+### 6.5 menu_custom.h
 <!-- BEGIN DOC-COMMENT H4 include/menu_custom.h -->
 
 #### `char* menu_custom_open()`
 
 Open the custom map input menu
+
 **Returns:** `The` — user provided (!) path
 
 <!-- END DOC-COMMENT -->
 
-### 5.6 menu_level_handle.h
+### 6.6 menu_level_handle.h
 <!-- BEGIN DOC-COMMENT H4 include/menu_level_handle.h -->
 
 #### `void menu_level_highlight(int id, int page, int max, bool active)`
@@ -565,11 +641,12 @@ Move level selection
 #### `int menu_level_open()`
 
 Open level select menu and wait for completed selection
+
 **Returns:** `Selected` — level's number
 
 <!-- END DOC-COMMENT -->
 
-### 5.7 menu_level_printer.h
+### 6.7 menu_level_printer.h
 <!-- BEGIN DOC-COMMENT H4 include/menu_level_printer.h -->
 
 #### `void menu_print_level_nav(bool direction, int color)`
@@ -613,7 +690,7 @@ Print the full level selection screen
 
 <!-- END DOC-COMMENT -->
 
-### 5.8 menu_main_handle.h
+### 6.8 menu_main_handle.h
 <!-- BEGIN DOC-COMMENT H4 include/menu_main_handle.h -->
 
 #### `bool menu_main_move(game_type* type_loc)`
@@ -629,11 +706,12 @@ Main menu movement looper
 #### `game_type menu_main_open()`
 
 Open main menu and wait for game type selection
+
 **Returns:** `Selected` — game type or exit request
 
 <!-- END DOC-COMMENT -->
 
-### 5.9 menu_main_printer.h
+### 6.9 menu_main_printer.h
 <!-- BEGIN DOC-COMMENT H4 include/menu_main_printer.h -->
 
 #### `void menu_main_print_highlighted(int id, bool highlighted)`
@@ -651,7 +729,7 @@ Print the full main menu
 
 <!-- END DOC-COMMENT -->
 
-### 5.10 printer.h
+### 6.10 printer.h
 <!-- BEGIN DOC-COMMENT H4 include/printer.h -->
 
 #### `void printnat(int x, int y, int n, char* c)`
