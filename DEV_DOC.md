@@ -1,6 +1,6 @@
 # SCHOKOBAN - DEVELOPER'S DOCUMENTATION
 
-## Table of contents{ignore=true}
+## Table of contents
 <!-- @import "[TOC]" {cmd="toc" depthFrom=2 depthTo=3 orderedList=false} -->
 
 <!-- code_chunk_output -->
