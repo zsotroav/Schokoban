@@ -4,9 +4,9 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-#define get_xy(map, x, y) *((map)->map[(x) * (map)->width + (y)])
+#define get_xy(map, y, x) *((map)->map[(x) * (map)->width + (y)])
 #define get_xy_offset(map, x, y) get_xy(map, ((map)->player_x + (x)), ((map)->player_y + (y)))
-#define set_xy(map, x, y, value) (*((map)->map[x * map->width + y]) = value)
+#define set_xy(map, y, x, value) (*((map)->map[x * map->width + y]) = value)
 #define set_xy_offset(map, x, y, value) set_xy(map, ((map)->player_x + (x)), ((map)->player_y + (y)), (value))
 #define indent(map) ((20 - map->width) / 2)
 #define go_to_last_move(move) while (move->next != NULL) move = move->next

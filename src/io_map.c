@@ -129,18 +129,18 @@ map_data* map_open(char* loc) {
 
 void map_load(map_data* map, FILE* mapptr) {
     char c;
-    int i = 0, j = 0;
+    int y = 0, x = 0;
     while(( c = fgetc(mapptr) ) != EOF ) {
         if (c == '\n') {
-            i++;
-            j = 0;
+            y++;
+            x = 0;
             continue;
         }
         if (!map_is_valid_char(c)) break;
-        set_xy(map, j++, i, c);
+        set_xy(map, x++, y, c);
         if (c == '@' || c == '+') {
-            map->player_x = j - 1;
-            map->player_y = i;
+            map->player_x = x - 1;
+            map->player_y = y;
         }
         if (c == '$') map->box++;
     }
