@@ -32,7 +32,7 @@ bool game_master(game_type type, int* level) {
     }
     if (type != CUSTOM) map->level = *level;
 
-    char* stats_loc = get_meta_file_name(map_loc, true);
+    char* stats_loc = get_meta_file_name(map_loc, false);
     FILE* sav = fopen(stats_loc, "r");
 
     if (sav != NULL && type != ARCADE) {
