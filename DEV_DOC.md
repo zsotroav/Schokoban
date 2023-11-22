@@ -501,6 +501,17 @@ The following section was generated with
 ### 6.4 io_map.h
 <!-- BEGIN DOC-COMMENT H4 include/io_map.h -->
 
+#### `char* get_meta_file_name(char* loc, bool stats)`
+
+**Brief:** Get the xsb metadata file's name, which is the file name with .dat/.sav at the end
+
+**Parameters:**
+
+* `loc` — Location of the XSB file
+* `stat` — true = stats file // false = save file
+
+**Returns:** `Malloced` — string
+
 #### `FILE* get_meta_file(char* loc, char* mode, bool stat)`
 
 **Brief:** Open stats/save state file, which is just the xsb map file with .dat/.sav at the end

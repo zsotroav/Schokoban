@@ -8,13 +8,17 @@
 #include "lib/debugmalloc.h"
 #include "lib/econio.h"
 
-FILE* get_meta_file(char* loc, char* mode, bool stats) {
+char* get_meta_file_name(char* loc, bool stats) {
     int len = strlen(loc) + 5;
     char *stats_loc = malloc(len);
     strcpy(stats_loc, loc);
     stats_loc[len-1] = '\0';
+    return strcat(stats_loc, stats ? ".dat" : ".sav");
+}
 
-    FILE* re = fopen(strcat(stats_loc, stats ? ".dat" : ".sav"), mode);
+FILE* get_meta_file(char* loc, char* mode, bool stats) {
+    char* stats_loc = get_meta_file_name(loc, stats);
+    FILE* re = fopen(stats_loc, mode);
     free(stats_loc);
     return re;
 }

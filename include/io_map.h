@@ -6,6 +6,14 @@
 #define map_is_valid_char(c) strchr("@+$*#._- ", c)
 
 /**
+ * @brief Get the xsb metadata file's name, which is the file name with .dat/.sav at the end
+ * @param loc Location of the XSB file
+ * @param stat true = stats file // false = save file
+ * @return Malloced string
+ */
+char* get_meta_file_name(char* loc, bool stats);
+
+/**
  * @brief Open stats/save state file, which is just the xsb map file with .dat/.sav at the end
  * @param loc Location of the XSB file
  * @param mode File open mode

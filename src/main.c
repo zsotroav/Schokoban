@@ -32,14 +32,20 @@ bool game_master(game_type type, int* level) {
     }
     if (type != CUSTOM) map->level = *level;
 
-    FILE* sav = get_meta_file(map_loc, "r", false);
+    char* stats_loc = get_meta_file_name(map_loc, true);
+    FILE* sav = fopen(stats_loc, "r");
+
     if (sav != NULL && type != ARCADE) {
-        printf("Found saved state for this map. Do you want to load it? (Y/N)\n");
+        printf("Found saved state for this map. Do you want to...? (l = load, d = delete, Other = ignore)\n");
 
         while (!econio_kbhit()) econio_sleep(0.2);
-        if (econio_getch() == 'y') map_load_moves(map, sav);
+        switch (econio_getch()) {
+            case 'l': map_load_moves(map, sav); fclose(sav); break;
+            case 'd': fclose(sav); remove(stats_loc); break;
+            default: fclose(sav); break;
+        }
     }
-    fclose(sav);
+    free(stats_loc);
 
     print_all(map);
 
